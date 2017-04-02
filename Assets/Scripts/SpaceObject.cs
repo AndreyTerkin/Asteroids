@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SpaceObject : MonoBehaviour
 {
-    protected void Explode()
+    protected virtual void Explode()
     {
         // TODO: show explode
         Destroy(gameObject);
