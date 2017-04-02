@@ -18,8 +18,6 @@ public class Bullet : MonoBehaviour
     {
         SpaceObject spaceObject = collider.GetComponent<SpaceObject>();
 
-        Debug.Log(spaceObject.name);
-
         if (spaceObject && spaceObject.transform != transform.parent)
             Destroy(gameObject);
     }
