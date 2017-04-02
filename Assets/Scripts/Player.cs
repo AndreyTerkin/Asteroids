@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Player : SpaceObject
 {
-    private SpriteRenderer spriteRenderer;
     private Transform spriteObject;
+    private Rigidbody2D body;
 
     [SerializeField]
     private float speed = 5.0f;
@@ -13,20 +13,39 @@ public class Player : SpaceObject
     [SerializeField]
     private GameObject bullet;
 
-    private float firePeriod = 0.5f;
+    private Border border;
+
+    private float firePeriod = 0.3f;
     private float previousShot = 0.0f;
 
 	void Awake ()
     {
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         spriteObject = transform.FindChild("Sprite");
-	}
-	
-	void FixedUpdate()
+        body = GetComponent<Rigidbody2D>();
+
+        border = FindObjectOfType<Boundary>().border;
+
+        Debug.Log("Awake: " + border.borderXmin + " " + border.borderXmax + " " + border.borderYmin + " " + border.borderYmax);
+    }
+
+    void Start()
+    {
+        Boundary boundary = FindObjectOfType<Boundary>();
+        if (boundary)
+        {
+            border = boundary.border;
+            Debug.Log("Start: " + border.borderXmin + " " + border.borderXmax + " " + border.borderYmin + " " + border.borderYmax);
+        }
+    }
+
+    void FixedUpdate()
     {
         Fly();
         if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
             Turn();
+
+        body.position = new Vector2(Mathf.Clamp(body.position.x, border.borderXmin, border.borderXmax),
+                                    Mathf.Clamp(body.position.y, border.borderYmin, border.borderYmax));
     }
 
     void Update()
@@ -41,7 +60,7 @@ public class Player : SpaceObject
     private void Fly()
     {
         Vector3 direction = transform.right * Input.GetAxisRaw("Horizontal") +
-                    transform.up * Input.GetAxisRaw("Vertical");
+                            transform.up * Input.GetAxisRaw("Vertical");
 
         transform.position = Vector3.MoveTowards(transform.position,
                                                  transform.position + direction,

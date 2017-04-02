@@ -4,7 +4,7 @@ using System.Collections;
 public class Bullet : MonoBehaviour
 {
 	[SerializeField]
-	private float speed = 8.0f;
+	private float speed = 15.0f;
 
     private Rigidbody2D rb;
 
