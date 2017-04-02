@@ -3,11 +3,11 @@ using System.Collections;
 
 public class Player : SpaceObject
 {
+    private Rigidbody2D rb;
     private Transform spriteObject;
-    private Rigidbody2D body;
 
     [SerializeField]
-    private float speed = 5.0f;
+    private float speed = 7.0f;
     [SerializeField]
     private Transform shooter;
     [SerializeField]
@@ -21,21 +21,14 @@ public class Player : SpaceObject
 	void Awake ()
     {
         spriteObject = transform.FindChild("Sprite");
-        body = GetComponent<Rigidbody2D>();
-
-        border = FindObjectOfType<Boundary>().border;
-
-        Debug.Log("Awake: " + border.borderXmin + " " + border.borderXmax + " " + border.borderYmin + " " + border.borderYmax);
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    void Start()
+    protected void Start()
     {
         Boundary boundary = FindObjectOfType<Boundary>();
         if (boundary)
-        {
             border = boundary.border;
-            Debug.Log("Start: " + border.borderXmin + " " + border.borderXmax + " " + border.borderYmin + " " + border.borderYmax);
-        }
     }
 
     void FixedUpdate()
@@ -44,8 +37,8 @@ public class Player : SpaceObject
         if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
             Turn();
 
-        body.position = new Vector2(Mathf.Clamp(body.position.x, border.borderXmin, border.borderXmax),
-                                    Mathf.Clamp(body.position.y, border.borderYmin, border.borderYmax));
+        rb.position = new Vector2(Mathf.Clamp(rb.position.x, border.borderXmin, border.borderXmax),
+                                  Mathf.Clamp(rb.position.y, border.borderYmin, border.borderYmax));
     }
 
     void Update()
@@ -59,11 +52,11 @@ public class Player : SpaceObject
 
     private void Fly()
     {
-        Vector3 direction = transform.right * Input.GetAxisRaw("Horizontal") +
+        Vector3 direct = transform.right * Input.GetAxisRaw("Horizontal") +
                             transform.up * Input.GetAxisRaw("Vertical");
 
         transform.position = Vector3.MoveTowards(transform.position,
-                                                 transform.position + direction,
+                                                 transform.position + direct,
                                                  speed * Time.deltaTime);
     }
 
@@ -84,5 +77,14 @@ public class Player : SpaceObject
     {
         GameObject shot = (GameObject)Instantiate(bullet, shooter.position, shooter.rotation);
         shot.transform.parent = gameObject.transform;
+    }
+
+    protected override void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.tag == "Space object")
+        {
+            Debug.Log("destroy from player " + collider.gameObject.name);
+            Explode();
+        }
     }
 }
