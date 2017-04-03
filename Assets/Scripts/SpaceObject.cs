@@ -14,7 +14,7 @@ public class SpaceObject : MonoBehaviour
         Bullet bullet = collider.GetComponent<Bullet>();
         if (bullet || collider.tag == "Player")
         {
-            Debug.Log("destroy from SpaceObjectw class " + collider.gameObject.name);
+            Debug.Log("destroy from SpaceObject class " + collider.gameObject.name);
             Explode();
         }
     }
