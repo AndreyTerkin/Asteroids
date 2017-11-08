@@ -26,6 +26,8 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        Screen.SetResolution(800, 600, true);
+
         Boundary boundary = FindObjectOfType<Boundary>();
         if (boundary)
             border = boundary.border;
