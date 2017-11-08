@@ -15,7 +15,7 @@ public class Asteroid : SpaceObject
             Vector2 direction = new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
             GameObject clone = Instantiate(fragment, transform.position, Quaternion.identity) as GameObject;
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
-            rb.AddForce(direction * 5.0f, ForceMode2D.Impulse);
+            rb.AddForce(direction * 4.0f, ForceMode2D.Impulse);
         }
         base.Explode();
     }

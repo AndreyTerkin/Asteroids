@@ -18,9 +18,9 @@ public class Player : SpaceObject
     private float firePeriod = 0.3f;
     private float previousShot = 0.0f;
 
-	void Awake ()
+    void Awake ()
     {
-        spriteObject = transform.FindChild("Sprite");
+        spriteObject = transform.Find("Sprite");
         rb = GetComponent<Rigidbody2D>();
     }
 

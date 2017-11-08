@@ -13,6 +13,8 @@ public class Boundary : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         boxCollider = GetComponent<BoxCollider2D>();
         boxCollider.size = new Vector2(rectTransform.rect.width, rectTransform.rect.height);
+
+        //Camera.main.
     }
 
     void OnTriggerExit2D(Collider2D collider)
