@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Player : SpaceObject
 {
+    public delegate void PositionChanged(Vector3 position);
+    public event PositionChanged PositionChangedHandler;
+
     private Rigidbody2D rb;
     private Transform spriteObject;
 
@@ -39,6 +42,9 @@ public class Player : SpaceObject
 
         rb.position = new Vector2(Mathf.Clamp(rb.position.x, border.borderXmin, border.borderXmax),
                                   Mathf.Clamp(rb.position.y, border.borderYmin, border.borderYmax));
+
+        if (PositionChangedHandler != null)
+            PositionChangedHandler(transform.position);
     }
 
     void Update()
@@ -75,7 +81,7 @@ public class Player : SpaceObject
 
     private void Shoot()
     {
-        GameObject shot = (GameObject)Instantiate(bullet, shooter.position, shooter.rotation);
+        GameObject shot = Instantiate(bullet, shooter.position, shooter.rotation);
         shot.transform.parent = gameObject.transform;
     }
 

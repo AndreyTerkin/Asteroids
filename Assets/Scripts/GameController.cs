@@ -31,8 +31,6 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        Screen.SetResolution(800, 600, true);
-
         Boundary boundary = FindObjectOfType<Boundary>();
         if (boundary)
             border = boundary.border;
@@ -53,7 +51,10 @@ public class GameController : MonoBehaviour
             {
                 float time = Random.Range(minAsteroidSpawnTime / waveNum,
                                           maxAsteroidSpawnTime / waveNum);
-                AsteroidFactory();
+                Vector2 direction = new Vector2(1.0f, 1.0f);
+                GameObject clone = _spaceObjectFactory.Create(asteroid, ref direction);
+                Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
+                rb.AddForce(direction * 3.0f, ForceMode2D.Impulse);
                 yield return new WaitForSeconds(time);
             }
         }
@@ -69,25 +70,10 @@ public class GameController : MonoBehaviour
             {
                 float time = Random.Range(minUfoSpawnTime / waveNum,
                                           maxUfoSpawnTime / waveNum);
-                UfoFactory();
+                Vector2 direction = new Vector2(1.0f, 1.0f);
+                GameObject clone = _spaceObjectFactory.Create(ufo, ref direction);
                 yield return new WaitForSeconds(time);
             }
         }
-    }
-
-    void AsteroidFactory()
-    {
-        Vector2 direction = new Vector2(1.0f, 1.0f);
-        GameObject clone = _spaceObjectFactory.Create(asteroid, ref direction);
-        Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
-        rb.AddForce(direction * 3.0f, ForceMode2D.Impulse);
-    }
-
-    void UfoFactory()
-    {
-        Vector2 direction = new Vector2(1.0f, 1.0f);
-        GameObject clone = _spaceObjectFactory.Create(ufo, ref direction);
-        Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
-        rb.AddForce(direction * 2.0f, ForceMode2D.Impulse);
     }
 }
