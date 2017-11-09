@@ -17,6 +17,9 @@ namespace Assets.Scripts.Factories
 
         public GameObject Create(GameObject gameObject, ref Vector2 direction)
         {
+            if (gameObject == null)
+                return null;
+
             BoxCollider2D collider = gameObject.GetComponent<BoxCollider2D>();
             Vector3 position = new Vector3();
             InitSpawnParameters(collider, ref position, ref direction);
@@ -56,9 +59,6 @@ namespace Assets.Scripts.Factories
                                        0.0f);
                 direction = _transform.right + new Vector3(0.0f, deflection);
             }
-
-            Debug.Log("Collider width: " + collider.size.x);
-            Debug.Log("Spawning: " + _border.borderXmax + " " + _border.borderXmin);
         }
     }
 }

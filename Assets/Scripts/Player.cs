@@ -4,7 +4,7 @@ using System.Collections;
 public class Player : SpaceObject
 {
     public delegate void PositionChanged(Vector3 position);
-    public event PositionChanged PositionChangedHandler;
+    public event PositionChanged PositionChangedEvent;
 
     private Rigidbody2D rb;
     private Transform spriteObject;
@@ -15,6 +15,8 @@ public class Player : SpaceObject
     private Transform shooter;
     [SerializeField]
     private GameObject bullet;
+
+    public int Score { get; set; }
 
     private Border border;
 
@@ -43,8 +45,8 @@ public class Player : SpaceObject
         rb.position = new Vector2(Mathf.Clamp(rb.position.x, border.borderXmin, border.borderXmax),
                                   Mathf.Clamp(rb.position.y, border.borderYmin, border.borderYmax));
 
-        if (PositionChangedHandler != null)
-            PositionChangedHandler(transform.position);
+        if (PositionChangedEvent != null)
+            PositionChangedEvent(transform.position);
     }
 
     void Update()
@@ -81,15 +83,23 @@ public class Player : SpaceObject
 
     private void Shoot()
     {
+        if (bullet == null)
+            return;
+
         GameObject shot = Instantiate(bullet, shooter.position, shooter.rotation);
         shot.transform.parent = gameObject.transform;
+    }
+
+    public void IncreaseScore(int score)
+    {
+        Score += score;
+        Debug.Log("Score is " + Score);
     }
 
     protected override void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.tag == "Space object")
         {
-            Debug.Log("destroy from player " + collider.gameObject.name);
             Explode();
         }
     }

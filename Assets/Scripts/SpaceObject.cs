@@ -3,6 +3,9 @@ using System.Collections;
 
 public class SpaceObject : MonoBehaviour
 {
+    public delegate void SpaceObjectDestroyed(int score);
+    public event SpaceObjectDestroyed SpaceObjectDestroyedEvent;
+
     protected virtual void Explode()
     {
         // TODO: show explode
@@ -14,8 +17,16 @@ public class SpaceObject : MonoBehaviour
         Bullet bullet = collider.GetComponent<Bullet>();
         if (bullet || collider.tag == "Player")
         {
-            Debug.Log("destroy from SpaceObject class " + collider.gameObject.name);
             Explode();
+        }
+    }
+
+    protected virtual void OnSpaceObjectDestroyed(int score)
+    {
+        SpaceObjectDestroyed handler = SpaceObjectDestroyedEvent;
+        if (handler != null)
+        {
+            handler(score);
         }
     }
 }

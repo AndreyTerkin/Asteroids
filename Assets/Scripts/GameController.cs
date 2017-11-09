@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     private SpaceObjectFactory _spaceObjectFactory;
 
     private Border border;
+    private Player player;
 
     private static float errorOffset = 0.25f;
 
@@ -35,6 +36,10 @@ public class GameController : MonoBehaviour
         if (boundary)
             border = boundary.border;
 
+        Player playerObj = FindObjectOfType<Player>();
+        if (playerObj)
+            player = playerObj;
+
         _spaceObjectFactory = new SpaceObjectFactory(transform, border);
 
         StartCoroutine(SpawnAsteroid());
@@ -52,9 +57,15 @@ public class GameController : MonoBehaviour
                 float time = Random.Range(minAsteroidSpawnTime / waveNum,
                                           maxAsteroidSpawnTime / waveNum);
                 Vector2 direction = new Vector2(1.0f, 1.0f);
-                GameObject clone = _spaceObjectFactory.Create(asteroid, ref direction);
-                Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
-                rb.AddForce(direction * 3.0f, ForceMode2D.Impulse);
+                GameObject gameObject = _spaceObjectFactory.Create(asteroid, ref direction);
+                if (gameObject)
+                {
+                    SpaceObject spaceObject = gameObject.GetComponent<SpaceObject>();
+                    spaceObject.SpaceObjectDestroyedEvent += player.IncreaseScore;
+
+                    Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
+                    rb.AddForce(direction * 3.0f, ForceMode2D.Impulse);
+                }
                 yield return new WaitForSeconds(time);
             }
         }
@@ -71,7 +82,12 @@ public class GameController : MonoBehaviour
                 float time = Random.Range(minUfoSpawnTime / waveNum,
                                           maxUfoSpawnTime / waveNum);
                 Vector2 direction = new Vector2(1.0f, 1.0f);
-                GameObject clone = _spaceObjectFactory.Create(ufo, ref direction);
+                GameObject gameObject = _spaceObjectFactory.Create(ufo, ref direction);
+                if (gameObject)
+                {
+                    SpaceObject spaceObject = gameObject.GetComponent<SpaceObject>();
+                    spaceObject.SpaceObjectDestroyedEvent += player.IncreaseScore;
+                }
                 yield return new WaitForSeconds(time);
             }
         }

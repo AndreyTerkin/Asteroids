@@ -5,6 +5,8 @@ public class Ufo : SpaceObject
 {
     [SerializeField]
     private float speed = 2.0f;
+    [SerializeField]
+    private int scoreForDestroy = 3;
 
     private Vector3 _aimPosition;
 
@@ -12,7 +14,7 @@ public class Ufo : SpaceObject
     {
         Player player = FindObjectOfType<Player>();
         if (player)
-            player.PositionChangedHandler += ChangeDirection;
+            player.PositionChangedEvent += ChangeDirection;
     }
 
     void FixedUpdate()
@@ -25,5 +27,11 @@ public class Ufo : SpaceObject
     private void ChangeDirection(Vector3 position)
     {
         _aimPosition = position;
+    }
+
+    protected override void Explode()
+    {
+        base.Explode();
+        base.OnSpaceObjectDestroyed(scoreForDestroy);
     }
 }
