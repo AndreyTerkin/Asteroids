@@ -9,10 +9,12 @@ public class GameController : MonoBehaviour
     public GameObject ufo;
     public Text scorePanel;
     public int score;
+    public RectTransform laserAccumulatorCharge;
 
     private SpaceObjectFactory _spaceObjectFactory;
 
     private Border border;
+    private Player player;
 
     private static float errorOffset = 0.25f;
 
@@ -35,6 +37,14 @@ public class GameController : MonoBehaviour
         Boundary boundary = FindObjectOfType<Boundary>();
         if (boundary)
             border = boundary.border;
+
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj)
+        {
+            player = playerObj.GetComponent<Player>();
+            if (player)
+                player.LaserChargeChangedEvent += UpdateLaserAccumulatorDisplay;
+        }
 
         _spaceObjectFactory = new SpaceObjectFactory(transform, border);
 
@@ -79,5 +89,13 @@ public class GameController : MonoBehaviour
     {
         score += scoreIncrement;
         scorePanel.text = "Score: " + score;
+    }
+
+    public void UpdateLaserAccumulatorDisplay(int charge, int maxCharge)
+    {
+        if (laserAccumulatorCharge == null)
+            return;
+
+        laserAccumulatorCharge.localScale = new Vector2((float)charge / (float)maxCharge, 1.0f);
     }
 }
