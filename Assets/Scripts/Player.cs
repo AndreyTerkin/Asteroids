@@ -16,8 +16,6 @@ public class Player : SpaceObject
     [SerializeField]
     private GameObject bullet;
 
-    public int Score { get; set; }
-
     private Border border;
 
     private float firePeriod = 0.3f;
@@ -88,12 +86,6 @@ public class Player : SpaceObject
 
         GameObject shot = Instantiate(bullet, shooter.position, shooter.rotation);
         shot.transform.parent = gameObject.transform;
-    }
-
-    public void IncreaseScore(int score)
-    {
-        Score += score;
-        Debug.Log("Score is " + Score);
     }
 
     protected override void OnTriggerEnter2D(Collider2D collider)

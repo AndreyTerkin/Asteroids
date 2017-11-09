@@ -31,7 +31,7 @@ namespace Assets.Scripts.Factories
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
             rb.AddForce(direction * speed, ForceMode2D.Impulse);
 
-            ScoreSubscriber.SubscribePlayerToObjectEvent(clone);
+            ScoreSubscriber.SubscribeScoreCounter(clone);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Assets.Scripts.Factories
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
             rb.AddForce(direction * speed, ForceMode2D.Impulse);
 
-            ScoreSubscriber.SubscribePlayerToObjectEvent(clone);
+            ScoreSubscriber.SubscribeScoreCounter(clone);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Assets.Scripts.Factories
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
             rb.AddForce(direction * speed, ForceMode2D.Impulse);
 
-            ScoreSubscriber.SubscribePlayerToObjectEvent(clone);
+            ScoreSubscriber.SubscribeScoreCounter(clone);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Assets.Scripts.Factories
             InitSpawnParameters(collider, ref position, ref direction);
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
 
-            ScoreSubscriber.SubscribePlayerToObjectEvent(clone);
+            ScoreSubscriber.SubscribeScoreCounter(clone);
         }
 
         protected virtual void InitSpawnParameters(BoxCollider2D collider, ref Vector3 position, ref Vector2 direction)

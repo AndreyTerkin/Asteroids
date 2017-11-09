@@ -1,24 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class ScoreSubscriber : MonoBehaviour
+    public class ScoreSubscriber
     {
-        public static void SubscribePlayerToObjectEvent(GameObject gameObject)
+        // In case of a big amount of objects on the scene this method can be slow
+        // But under existing conditions it's acceptable
+        public static void SubscribeScoreCounter(GameObject gameObject)
         {
-            if (gameObject)
-            {
-                Player player = FindObjectOfType<Player>();
-                if (player == null)
-                    return;
+            if (gameObject == null)
+                return;
 
-                SpaceObject spaceObject = gameObject.GetComponent<SpaceObject>();
-                spaceObject.SpaceObjectDestroyedEvent += player.IncreaseScore;
-            }
+            GameObject gameControllerObject = GameObject.FindGameObjectWithTag("GameController");
+            if (gameControllerObject == null)
+                return;
+
+            GameController gameController = gameControllerObject.GetComponent<GameController>();
+            if (gameController == null)
+                return;
+
+            SpaceObject spaceObject = gameObject.GetComponent<SpaceObject>();
+            spaceObject.SpaceObjectDestroyedEvent += gameController.UpdateScore;
         }
     }
 }

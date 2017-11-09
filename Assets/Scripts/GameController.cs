@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
-using System.Collections.Generic;
-
 using Assets.Scripts.Factories;
-using Assets.Scripts;
 
 public class GameController : MonoBehaviour
 {
     public GameObject asteroid;
     public GameObject ufo;
+    public Text scorePanel;
+    public int score;
 
     private SpaceObjectFactory _spaceObjectFactory;
 
@@ -73,5 +73,11 @@ public class GameController : MonoBehaviour
                 yield return new WaitForSeconds(time);
             }
         }
+    }
+
+    public void UpdateScore(int scoreIncrement)
+    {
+        score += scoreIncrement;
+        scorePanel.text = "Score: " + score;
     }
 }
