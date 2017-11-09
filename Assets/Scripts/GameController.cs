@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using Assets.Scripts.Factories;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -30,10 +31,14 @@ public class GameController : MonoBehaviour
     private int waveNum = 0;
     private int enemiesPerWave = 10;
     private int ufoCount = 1;
-    private float spawnPeriod = 2.0f; 
+    private float spawnPeriod = 2.0f;
+
+    private bool gameOverFlag;
 
     void Start()
     {
+        gameOverFlag = false;
+
         Boundary boundary = FindObjectOfType<Boundary>();
         if (boundary)
             border = boundary.border;
@@ -43,13 +48,22 @@ public class GameController : MonoBehaviour
         {
             player = playerObj.GetComponent<Player>();
             if (player)
+            {
                 player.LaserChargeChangedEvent += UpdateLaserAccumulatorDisplay;
+                (player as SpaceObject).SpaceObjectDestroyedEvent += GameOver;
+            }
         }
 
         _spaceObjectFactory = new SpaceObjectFactory(transform, border);
 
         StartCoroutine(SpawnAsteroid());
         StartCoroutine(SpawnUfo());
+    }
+
+    void Update()
+    {
+        if (gameOverFlag)
+            SceneManager.LoadScene("Asteroids");
     }
 
     IEnumerator SpawnAsteroid()
@@ -97,5 +111,12 @@ public class GameController : MonoBehaviour
             return;
 
         laserAccumulatorCharge.localScale = new Vector2((float)charge / (float)maxCharge, 1.0f);
+    }
+
+    // TODO: replace score to DestroyedEventArgs class or something,
+    // because score isn't used here
+    public void GameOver(int score)
+    {
+        gameOverFlag = true;
     }
 }

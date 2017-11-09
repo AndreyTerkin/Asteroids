@@ -132,4 +132,10 @@ public class Player : SpaceObject
             Explode();
         }
     }
+
+    protected override void Explode()
+    {
+        base.Explode();
+        base.OnSpaceObjectDestroyed(0);
+    }
 }
