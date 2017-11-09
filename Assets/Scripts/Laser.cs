@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using UnityEngine;
 
-namespace Assets.Scripts
+class Laser : MonoBehaviour
 {
-    class Laser
+    [SerializeField]
+    private float speed = 15.0f;
+
+    private Rigidbody2D rb;
+
+    void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+        rb.velocity = transform.up * speed;
     }
 }

@@ -15,6 +15,8 @@ public class Player : SpaceObject
     private Transform shooter;
     [SerializeField]
     private GameObject bullet;
+    [SerializeField]
+    private GameObject laserBolt;
 
     private Border border;
 
@@ -54,6 +56,11 @@ public class Player : SpaceObject
             previousShot = Time.time + firePeriod;
             Shoot();
         }
+        if (Input.GetButton("Fire2") && Time.time > previousShot)
+        {
+            previousShot = Time.time + firePeriod;
+            LaserShoot();
+        }
     }
 
     private void Fly()
@@ -85,6 +92,15 @@ public class Player : SpaceObject
             return;
 
         GameObject shot = Instantiate(bullet, shooter.position, shooter.rotation);
+        shot.transform.parent = gameObject.transform;
+    }
+
+    private void LaserShoot()
+    {
+        if (laserBolt == null)
+            return;
+
+        GameObject shot = Instantiate(laserBolt, shooter.position, shooter.rotation);
         shot.transform.parent = gameObject.transform;
     }
 

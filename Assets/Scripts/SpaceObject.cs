@@ -14,8 +14,7 @@ public class SpaceObject : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
-        Bullet bullet = collider.GetComponent<Bullet>();
-        if (bullet || collider.tag == "Player")
+        if (collider.tag == "Weapon" || collider.tag == "Player")
         {
             Explode();
         }
