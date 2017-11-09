@@ -15,15 +15,83 @@ namespace Assets.Scripts.Factories
             _border = border;
         }
 
-        public GameObject Create(GameObject gameObject, ref Vector2 direction)
+        /// <summary>
+        /// Instantiate gameObject clone with random direction and given position and speed
+        /// </summary>
+        /// <param name="gameObject">GameObject instance to clone</param>
+        /// <param name="position"></param>
+        /// <param name="speed"></param>
+        public static void Create(GameObject gameObject, Vector3 position, float speed)
         {
             if (gameObject == null)
-                return null;
+                return;
+
+            Vector2 direction = new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
+            GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
+            Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
+            rb.AddForce(direction * speed, ForceMode2D.Impulse);
+
+            ScoreSubscriber.SubscribePlayerToObjectEvent(clone);
+        }
+
+        /// <summary>
+        /// Instantiate gameObject clone with given position, direction and speed
+        /// </summary>
+        /// <param name="gameObject">GameObject instance to clone</param>
+        /// <param name="position"></param>
+        /// <param name="direction"></param>
+        /// <param name="speed"></param>
+        public static void Create(GameObject gameObject, Vector3 position, Vector2 direction, float speed)
+        {
+            if (gameObject == null)
+                return;
+
+            GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
+            Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
+            rb.AddForce(direction * speed, ForceMode2D.Impulse);
+
+            ScoreSubscriber.SubscribePlayerToObjectEvent(clone);
+        }
+
+        /// <summary>
+        /// Instantiate gameObject clone behind the border with given speed
+        /// </summary>
+        /// <param name="gameObject">GameObject instance to clone</param>
+        /// <param name="speed"></param>
+        public void Create(GameObject gameObject, float speed)
+        {
+            if (gameObject == null)
+                return;
 
             BoxCollider2D collider = gameObject.GetComponent<BoxCollider2D>();
             Vector3 position = new Vector3();
+            Vector2 direction = new Vector2(1.0f, 1.0f);
+
             InitSpawnParameters(collider, ref position, ref direction);
-            return Instantiate(gameObject, position, Quaternion.identity) as GameObject;
+            GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
+            Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
+            rb.AddForce(direction * speed, ForceMode2D.Impulse);
+
+            ScoreSubscriber.SubscribePlayerToObjectEvent(clone);
+        }
+
+        /// <summary>
+        /// Instantiate gameObject clone behind the border without impulse
+        /// </summary>
+        /// <param name="gameObject">GameObject instance to clone</param>
+        public void Create(GameObject gameObject)
+        {
+            if (gameObject == null)
+                return;
+
+            BoxCollider2D collider = gameObject.GetComponent<BoxCollider2D>();
+            Vector3 position = new Vector3();
+            Vector2 direction = new Vector2(1.0f, 1.0f);
+
+            InitSpawnParameters(collider, ref position, ref direction);
+            GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
+
+            ScoreSubscriber.SubscribePlayerToObjectEvent(clone);
         }
 
         protected virtual void InitSpawnParameters(BoxCollider2D collider, ref Vector3 position, ref Vector2 direction)
