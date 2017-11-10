@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using Assets.Scripts.Factories;
 using UnityEngine.SceneManagement;
+using Assets.Scripts.Factories;
 
 public class GameController : MonoBehaviour
 {
     public GameObject asteroid;
     public GameObject ufo;
     public Text scorePanel;
+    public GameObject menu;
     public int score;
     public RectTransform laserAccumulatorCharge;
 
@@ -16,8 +17,6 @@ public class GameController : MonoBehaviour
 
     private Border border;
     private Player player;
-
-    private static float errorOffset = 0.25f;
 
     [SerializeField]
     private float minAsteroidSpawnTime = 1.0f;
@@ -30,14 +29,17 @@ public class GameController : MonoBehaviour
 
     private int waveNum = 0;
     private int enemiesPerWave = 10;
-    private int ufoCount = 1;
-    private float spawnPeriod = 2.0f;
 
     private bool gameOverFlag;
+    private bool restartFlag;
 
     void Start()
     {
         gameOverFlag = false;
+        restartFlag = false;
+
+        if (menu != null)
+            menu.SetActive(false);
 
         Boundary boundary = FindObjectOfType<Boundary>();
         if (boundary)
@@ -62,7 +64,7 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (gameOverFlag)
+        if (restartFlag)
             SceneManager.LoadScene("Asteroids");
     }
 
@@ -76,7 +78,6 @@ public class GameController : MonoBehaviour
             {
                 float time = Random.Range(minAsteroidSpawnTime / waveNum,
                                           maxAsteroidSpawnTime / waveNum);
-                Vector2 direction = new Vector2(1.0f, 1.0f);
                 _spaceObjectFactory.Create(asteroid, 3.0f);
                 yield return new WaitForSeconds(time);
             }
@@ -117,6 +118,23 @@ public class GameController : MonoBehaviour
     // because score isn't used here
     public void GameOver(int score)
     {
-        gameOverFlag = true;
+        StopAllCoroutines();
+        if (menu != null)
+            menu.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        restartFlag = true;
+    }
+
+    public void ChangeGameView()
+    {
+
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
