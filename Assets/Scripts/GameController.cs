@@ -1,11 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
 using Assets.Scripts.Factories;
+
+public enum Representation : int
+{
+    Sprite,
+    Vector
+}
 
 public class GameController : MonoBehaviour
 {
+    public Transform backgound;
     public GameObject asteroid;
     public GameObject ufo;
     public Text scorePanel;
@@ -31,15 +39,30 @@ public class GameController : MonoBehaviour
     private int enemiesPerWave = 10;
 
     private bool restartFlag;
-    private bool spriteView;
+    private Representation representation;
+
+    private List<GameObject> backgoundRepresentations;
 
     void Start()
     {
         restartFlag = false;
-        spriteView = true;
+        representation = PlayerPrefs.GetInt("Representation", -1) == -1
+            ? Representation.Sprite
+            : (Representation)PlayerPrefs.GetInt("Representation");
+
+        if (backgound != null)
+        {
+            backgoundRepresentations = new List<GameObject>();
+            foreach (Transform child in backgound)
+            {
+                backgoundRepresentations.Add(child.gameObject);
+                child.gameObject.SetActive(child.tag == "SpriteRepresentation"
+                                           ^ (int)representation == (int)Representation.Sprite);
+            }
+        }
 
         if (menu != null)
-            menu.SetActive(false);
+        menu.SetActive(false);
 
         Boundary boundary = FindObjectOfType<Boundary>();
         if (boundary)
@@ -65,7 +88,10 @@ public class GameController : MonoBehaviour
     void Update()
     {
         if (restartFlag)
+        {
+            PlayerPrefs.SetInt("Representation", (int)representation);
             SceneManager.LoadScene("Asteroids");
+        }
     }
 
     IEnumerator SpawnAsteroid()
@@ -130,25 +156,24 @@ public class GameController : MonoBehaviour
 
     public void ChangeGameView()
     {
-        GameObject background = GameObject.FindGameObjectWithTag("Background image");
-        if (background == null)
-            return;
+        representation = (int)representation == (int)Representation.Sprite
+            ? Representation.Vector
+            : Representation.Sprite;
 
-        Image img = background.GetComponent<Image>();
-        if (spriteView)
+        foreach (GameObject represent in backgoundRepresentations)
         {
-            img.overrideSprite = Resources.Load<Sprite>("black_background");
-            spriteView = false;
-        }
-        else
-        {
-            img.overrideSprite = null;
-            spriteView = true;
+            represent.SetActive(represent.tag == "SpriteRepresentation"
+                                ^ (int)representation == (int)Representation.Sprite);
         }
     }
 
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void ObjectsRepresentation()
+    {
+        
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.Factories
 {
-    class SpaceObjectFactory : MonoBehaviour
+    class SpaceObjectFactory : Object
     {
         protected Transform _transform;
         protected Border _border;

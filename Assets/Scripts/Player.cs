@@ -10,7 +10,7 @@ public class Player : SpaceObject
     public event LaserChargeChanged LaserChargeChangedEvent;
 
     private Rigidbody2D rb;
-    private Transform spriteObject;
+    private Transform representation;
 
     [SerializeField]
     private float speed = 7.0f;
@@ -33,7 +33,7 @@ public class Player : SpaceObject
 
     void Awake ()
     {
-        spriteObject = transform.Find("Sprite");
+        representation = transform.Find("Representation");
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -98,7 +98,7 @@ public class Player : SpaceObject
 
         float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg - 90;
 
-        spriteObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        representation.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
     private void Shoot()
