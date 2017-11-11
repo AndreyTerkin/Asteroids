@@ -5,15 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Factories;
 
-public enum Representation : int
-{
-    Sprite,
-    Vector
-}
-
 public class GameController : MonoBehaviour
 {
-    public Transform backgound;
     public GameObject asteroid;
     public GameObject ufo;
     public Text scorePanel;
@@ -22,6 +15,7 @@ public class GameController : MonoBehaviour
     public RectTransform laserAccumulatorCharge;
 
     private SpaceObjectFactory _spaceObjectFactory;
+    private RepresentationManager representationManager;
 
     private Border border;
     private Player player;
@@ -39,27 +33,12 @@ public class GameController : MonoBehaviour
     private int enemiesPerWave = 10;
 
     private bool restartFlag;
-    private Representation representation;
-
-    private List<GameObject> backgoundRepresentations;
 
     void Start()
     {
         restartFlag = false;
-        representation = PlayerPrefs.GetInt("Representation", -1) == -1
-            ? Representation.Sprite
-            : (Representation)PlayerPrefs.GetInt("Representation");
 
-        if (backgound != null)
-        {
-            backgoundRepresentations = new List<GameObject>();
-            foreach (Transform child in backgound)
-            {
-                backgoundRepresentations.Add(child.gameObject);
-                child.gameObject.SetActive(child.tag == "SpriteRepresentation"
-                                           ^ (int)representation == (int)Representation.Sprite);
-            }
-        }
+        representationManager = GetComponent<RepresentationManager>();
 
         if (menu != null)
         menu.SetActive(false);
@@ -89,7 +68,7 @@ public class GameController : MonoBehaviour
     {
         if (restartFlag)
         {
-            PlayerPrefs.SetInt("Representation", (int)representation);
+            PlayerPrefs.SetInt("Representation", (int)representationManager.Representation);
             SceneManager.LoadScene("Asteroids");
         }
     }
@@ -156,24 +135,11 @@ public class GameController : MonoBehaviour
 
     public void ChangeGameView()
     {
-        representation = (int)representation == (int)Representation.Sprite
-            ? Representation.Vector
-            : Representation.Sprite;
-
-        foreach (GameObject represent in backgoundRepresentations)
-        {
-            represent.SetActive(represent.tag == "SpriteRepresentation"
-                                ^ (int)representation == (int)Representation.Sprite);
-        }
+        representationManager.ChangeRepresentation();
     }
 
     public void QuitGame()
     {
         Application.Quit();
-    }
-
-    public void ObjectsRepresentation()
-    {
-        
     }
 }
