@@ -14,14 +14,14 @@ public class RepresentationManager : MonoBehaviour
     public List<Transform> multiRepresentableObjects;
 
     private Representation representation;
-
     public Representation Representation { get { return representation; } }
 
     void Start()
     {
-        representation = PlayerPrefs.GetInt("Representation", -1) == -1
-            ? Representation.Sprite
-            : (Representation)PlayerPrefs.GetInt("Representation");
+        //representation = PlayerPrefs.GetInt("Representation", -1) == -1
+        //    ? Representation.Sprite
+        //    : (Representation)PlayerPrefs.GetInt("Representation");
+        representation = Representation.Vector;
 
         UpdateRepresentaion();
     }

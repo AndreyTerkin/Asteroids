@@ -63,7 +63,10 @@ namespace Assets.Scripts.Factories
             if (gameObject == null)
                 return;
 
-            BoxCollider2D collider = gameObject.GetComponent<BoxCollider2D>();
+            BoxCollider2D collider = GetCollider(gameObject);
+            if (collider == null)
+                return;
+
             Vector3 position = new Vector3();
             Vector2 direction = new Vector2(1.0f, 1.0f);
 
@@ -84,7 +87,10 @@ namespace Assets.Scripts.Factories
             if (gameObject == null)
                 return;
 
-            BoxCollider2D collider = gameObject.GetComponent<BoxCollider2D>();
+            BoxCollider2D collider = GetCollider(gameObject);
+            if (collider == null)
+                return;
+
             Vector3 position = new Vector3();
             Vector2 direction = new Vector2(1.0f, 1.0f);
 
@@ -127,6 +133,22 @@ namespace Assets.Scripts.Factories
                                        0.0f);
                 direction = _transform.right + new Vector3(0.0f, deflection);
             }
+        }
+
+        private BoxCollider2D GetCollider(GameObject gameObj)
+        {
+            foreach (Transform child in gameObj.transform)
+            {
+                if(child.tag == "Representation")
+                {
+                    for (int i=0; i < child.childCount; i++)
+                    {
+                        if (child.GetChild(i).gameObject.activeSelf)
+                            return child.GetChild(i).GetComponent<BoxCollider2D>();
+                    }
+                }
+            }
+            return null;
         }
     }
 }

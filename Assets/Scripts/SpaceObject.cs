@@ -13,7 +13,9 @@ public class SpaceObject : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.tag == "Weapon" || collider.tag == "Player")
+        if (collider.tag == "Weapon"
+            || (collider.transform.parent != null && collider.transform.parent.parent != null
+            && collider.transform.parent.parent.tag == "Player"))
         {
             Explode();
         }
