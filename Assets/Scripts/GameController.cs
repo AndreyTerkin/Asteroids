@@ -60,8 +60,10 @@ public class GameController : MonoBehaviour
 
         _spaceObjectFactory = new SpaceObjectFactory(transform, border);
 
-        StartCoroutine(SpawnAsteroid());
-        StartCoroutine(SpawnUfo());
+        if (asteroid != null)
+            StartCoroutine(SpawnAsteroid());
+        if (ufo != null)
+            StartCoroutine(SpawnUfo());
     }
 
     void Update()

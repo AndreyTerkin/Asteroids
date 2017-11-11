@@ -1,41 +1,52 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
 public class Circle : MonoBehaviour
 {
-    [Range(0.1f, 100f)]
+    public int vertexCount = 40;
+    public float lineWidth = 0.2f;
     public float radius = 1.0f;
 
-    [Range(3, 256)]
-    public int numSegments = 128;
+    private LineRenderer lineRenderer;
 
-    void Start()
+    private void Awake()
     {
-        DoRenderer();
+        lineRenderer = GetComponent<LineRenderer>();
+        InitCircle();
     }
 
-    public void DoRenderer()
+    private void InitCircle()
     {
-        LineRenderer lineRenderer = gameObject.GetComponent<LineRenderer>();
-        Color c1 = new Color(0.5f, 0.5f, 0.5f, 1);
-        lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
-        lineRenderer.SetColors(c1, c1);
-        lineRenderer.SetWidth(0.5f, 0.5f);
-        lineRenderer.SetVertexCount(numSegments + 1);
-        lineRenderer.useWorldSpace = false;
+        lineRenderer.widthMultiplier = lineWidth;
+        Vector3[] vertices = GetVertices();
+        lineRenderer.positionCount = vertexCount;
+        lineRenderer.SetPositions(vertices);
+    }
 
-        float deltaTheta = (float)(2.0 * Mathf.PI) / numSegments;
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Vector3[] vertices = GetVertices();
+        for(int i = 1; i < vertices.Length; i++)
+        {
+            Gizmos.DrawLine(transform.position + vertices[i-1], transform.position + vertices[i]);
+        }
+    }
+#endif
+
+    private Vector3[] GetVertices()
+    {
+        Vector3[] vertices = new Vector3[vertexCount];
+
+        float deltaTheta = (2 * Mathf.PI) / vertexCount;
         float theta = 0f;
 
-        for (int i = 0; i < numSegments + 1; i++)
+        Vector3 oldPos = Vector3.zero;
+        for (int i = 0; i < vertexCount; i++)
         {
-            float x = radius * Mathf.Cos(theta);
-            float z = radius * Mathf.Sin(theta);
-            Vector3 pos = new Vector3(x, 0, z);
-            lineRenderer.SetPosition(i, pos);
+            vertices[i] = new Vector3(radius * Mathf.Cos(theta), radius * Mathf.Sin(theta), 0f);
             theta += deltaTheta;
         }
+        return vertices;
     }
 }

@@ -21,7 +21,7 @@ public class RepresentationManager : MonoBehaviour
         //representation = PlayerPrefs.GetInt("Representation", -1) == -1
         //    ? Representation.Sprite
         //    : (Representation)PlayerPrefs.GetInt("Representation");
-        representation = Representation.Vector;
+        representation = Representation.Sprite;
 
         UpdateRepresentaion();
     }
