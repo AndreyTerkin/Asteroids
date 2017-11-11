@@ -30,13 +30,13 @@ public class GameController : MonoBehaviour
     private int waveNum = 0;
     private int enemiesPerWave = 10;
 
-    private bool gameOverFlag;
     private bool restartFlag;
+    private bool spriteView;
 
     void Start()
     {
-        gameOverFlag = false;
         restartFlag = false;
+        spriteView = true;
 
         if (menu != null)
             menu.SetActive(false);
@@ -130,7 +130,21 @@ public class GameController : MonoBehaviour
 
     public void ChangeGameView()
     {
+        GameObject background = GameObject.FindGameObjectWithTag("Background image");
+        if (background == null)
+            return;
 
+        Image img = background.GetComponent<Image>();
+        if (spriteView)
+        {
+            img.overrideSprite = Resources.Load<Sprite>("black_background");
+            spriteView = false;
+        }
+        else
+        {
+            img.overrideSprite = null;
+            spriteView = true;
+        }
     }
 
     public void QuitGame()
