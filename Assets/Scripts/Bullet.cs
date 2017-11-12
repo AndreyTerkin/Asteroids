@@ -15,9 +15,11 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        SpaceObject spaceObject = collider.GetComponent<SpaceObject>();
-
-        if (spaceObject && spaceObject.transform != transform.parent)
-            Destroy(gameObject);
+        if (collider.transform.parent != null && collider.transform.parent.parent != null)
+        {
+            var colliderParent = collider.transform.parent.parent;
+            if (colliderParent.tag == "Space object")
+                Destroy(gameObject);
+        }
     }
 }

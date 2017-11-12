@@ -18,10 +18,10 @@ public class RepresentationManager : MonoBehaviour
 
     void Start()
     {
-        //representation = PlayerPrefs.GetInt("Representation", -1) == -1
-        //    ? Representation.Sprite
-        //    : (Representation)PlayerPrefs.GetInt("Representation");
-        representation = Representation.Sprite;
+        representation = PlayerPrefs.GetInt("Representation", -1) == -1
+            ? Representation.Sprite
+            : (Representation)PlayerPrefs.GetInt("Representation");
+        //representation = Representation.Sprite;
 
         UpdateRepresentaion();
     }
@@ -37,6 +37,7 @@ public class RepresentationManager : MonoBehaviour
 
     private void UpdateRepresentaion()
     {
+        // TODO: place fot improvement
         foreach (var obj in multiRepresentableObjects)
         {
             if (obj == null)
@@ -49,6 +50,9 @@ public class RepresentationManager : MonoBehaviour
 
                 foreach (Transform represent in child)
                 {
+                    if (represent.tag != "SpriteRepresentation" && represent.tag != "VectorRepresentation")
+                        continue;
+
                     represent.gameObject.SetActive(represent.tag == "SpriteRepresentation"
                                                    ^ (int)representation == (int)Representation.Sprite);
                 }

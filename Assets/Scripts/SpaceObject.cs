@@ -13,6 +13,7 @@ public class SpaceObject : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
+        // TODO: place for improvement
         if (collider.transform.parent != null && collider.transform.parent.parent != null)
         {
             var colliderParent = collider.transform.parent.parent;

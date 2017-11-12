@@ -41,7 +41,7 @@ public class GameController : MonoBehaviour
         representationManager = GetComponent<RepresentationManager>();
 
         if (menu != null)
-        menu.SetActive(false);
+            menu.SetActive(false);
 
         Boundary boundary = FindObjectOfType<Boundary>();
         if (boundary)
