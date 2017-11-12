@@ -17,8 +17,14 @@ public class Boundary : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collider)
     {
-        if (collider.tag != "Player")
-            Destroy(collider.gameObject);
+        if (collider.transform.parent != null && collider.transform.parent.parent != null)
+        {
+            var colliderParent = collider.transform.parent.parent;
+            if (colliderParent.tag != "Player")
+            {
+                Destroy(colliderParent.gameObject);
+            }
+        }
     }
 }
 
