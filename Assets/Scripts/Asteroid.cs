@@ -22,7 +22,7 @@ public class Asteroid : SpaceObject
 
             SpaceObjectFactory.Create(fragment, transform.position, asteroidFragmentSpeed);
         }
-        base.Explode();
         base.OnSpaceObjectDestroyed(scoreForDestroy);
+        base.Explode();
     }
 }

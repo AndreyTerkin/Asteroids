@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public enum Representation : int
@@ -11,17 +10,14 @@ public enum Representation : int
 public class RepresentationManager : MonoBehaviour
 {
     public Transform backgound;
-    public List<Transform> multiRepresentableObjects;
+    public List<GameObject> multiRepresentableObjects;
 
     private Representation representation;
     public Representation Representation { get { return representation; } }
 
-    void Start()
+    void Awake()
     {
-        representation = PlayerPrefs.GetInt("Representation", -1) == -1
-            ? Representation.Sprite
-            : (Representation)PlayerPrefs.GetInt("Representation");
-
+        representation = Representation.Sprite;
         UpdateRepresentaion();
     }
 
@@ -49,13 +45,13 @@ public class RepresentationManager : MonoBehaviour
 
     private void UpdateRepresentaion()
     {
-        // TODO: place fot improvement
+        // TODO: place for improvement
         foreach (var obj in multiRepresentableObjects)
         {
             if (obj == null)
                 continue;
 
-            foreach (Transform child in obj)
+            foreach (Transform child in obj.transform)
             {
                 if (child.tag != "Representation")
                     continue;
@@ -82,5 +78,21 @@ public class RepresentationManager : MonoBehaviour
          */
         return (tag == "SpriteRepresentation")
                 == ((int)representation == (int)Representation.Sprite);
+    }
+
+    /// <summary>
+    /// Receive the first game object which has component T
+    /// </summary>
+    /// <typeparam name="T">Wanted component (attached script recommended)</typeparam>
+    /// <returns>Game object</returns>
+    public GameObject GetGameObjectOfType<T>() where T : Component
+    {
+        foreach (var obj in multiRepresentableObjects)
+        {
+            if (obj.GetComponent<T>() != null)
+                return obj;
+        }
+
+        return null;
     }
 }

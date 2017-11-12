@@ -31,7 +31,7 @@ public class Ufo : SpaceObject
 
     protected override void Explode()
     {
-        base.Explode();
         base.OnSpaceObjectDestroyed(scoreForDestroy);
+        base.Explode();
     }
 }

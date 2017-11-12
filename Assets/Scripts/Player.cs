@@ -137,7 +137,7 @@ public class Player : SpaceObject
 
     protected override void Explode()
     {
-        base.Explode();
         base.OnSpaceObjectDestroyed(0);
+        base.Explode();
     }
 }

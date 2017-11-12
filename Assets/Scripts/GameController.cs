@@ -1,25 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.Collections;
-using System.Collections.Generic;
 using Assets.Scripts.Factories;
 
 public class GameController : MonoBehaviour
 {
-    public GameObject asteroid;
     public float asteroidSpeed = 3.0f;
-    public GameObject ufo;
     public Text scorePanel;
     public GameObject menu;
     public int score;
     public RectTransform laserAccumulatorCharge;
-
-    private SpaceObjectFactory _spaceObjectFactory;
-    private RepresentationManager representationManager;
-
-    private Border border;
-    private Player player;
 
     [SerializeField]
     private float minAsteroidSpawnTime = 1.0f;
@@ -30,16 +20,29 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private float maxUfoSpawnTime = 12.0f;
 
-    private int waveNum = 0;
-    private int enemiesPerWave = 10;
+    private SpaceObjectFactory _spaceObjectFactory;
+    private RepresentationManager representationManager;
+
+    private Border border;
+    private GameObject player;
+    private GameObject asteroid;
+    private GameObject ufo;
+
+    private int waveNum;
+    private int enemiesPerWave;
 
     private bool restartFlag;
 
     void Start()
     {
         restartFlag = false;
+        waveNum = 0;
+        enemiesPerWave = 10;
 
         representationManager = GetComponent<RepresentationManager>();
+        player = representationManager.GetGameObjectOfType<Player>();
+        asteroid = representationManager.GetGameObjectOfType<Asteroid>();
+        ufo = representationManager.GetGameObjectOfType<Ufo>();
 
         if (menu != null)
             menu.SetActive(false);
@@ -48,19 +51,18 @@ public class GameController : MonoBehaviour
         if (boundary)
             border = boundary.border;
 
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj)
+        if (player)
         {
-            player = playerObj.GetComponent<Player>();
-            if (player)
+            var instance = Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity);
+            Player playerScript = instance.GetComponent<Player>();
+            if (playerScript)
             {
-                player.LaserChargeChangedEvent += UpdateLaserAccumulatorDisplay;
-                (player as SpaceObject).SpaceObjectDestroyedEvent += GameOver;
+                playerScript.LaserChargeChangedEvent += UpdateLaserAccumulatorDisplay;
+                (playerScript as SpaceObject).SpaceObjectDestroyedEvent += GameOver;
             }
         }
 
         _spaceObjectFactory = new SpaceObjectFactory(transform, border);
-
         if (asteroid != null)
             StartCoroutine(SpawnAsteroid());
         if (ufo != null)
@@ -71,8 +73,19 @@ public class GameController : MonoBehaviour
     {
         if (restartFlag)
         {
-            PlayerPrefs.SetInt("Representation", (int)representationManager.Representation);
-            SceneManager.LoadScene("Asteroids");
+            DestroyObjectsOfTag("Player");
+            DestroyObjectsOfTag("Space object");
+            DestroyObjectsOfTag("Weapon");
+            Start();
+        }
+    }
+
+    private void DestroyObjectsOfTag(string tag)
+    {
+        var objects = GameObject.FindGameObjectsWithTag(tag);
+        foreach (var obj in objects)
+        {
+            Destroy(obj);
         }
     }
 
