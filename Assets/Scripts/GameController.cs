@@ -8,6 +8,7 @@ using Assets.Scripts.Factories;
 public class GameController : MonoBehaviour
 {
     public GameObject asteroid;
+    public float asteroidSpeed = 3.0f;
     public GameObject ufo;
     public Text scorePanel;
     public GameObject menu;
@@ -85,7 +86,7 @@ public class GameController : MonoBehaviour
             {
                 float time = Random.Range(minAsteroidSpawnTime / waveNum,
                                           maxAsteroidSpawnTime / waveNum);
-                _spaceObjectFactory.Create(asteroid, 3.0f);
+                _spaceObjectFactory.Create(asteroid, asteroidSpeed);
                 yield return new WaitForSeconds(time);
             }
         }

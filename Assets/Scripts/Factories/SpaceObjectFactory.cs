@@ -29,7 +29,7 @@ namespace Assets.Scripts.Factories
             Vector2 direction = new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
-            rb.AddForce(direction * speed, ForceMode2D.Impulse);
+            rb.AddForce(direction.normalized * speed, ForceMode2D.Impulse);
 
             ScoreSubscriber.SubscribeScoreCounter(clone);
         }
@@ -48,7 +48,7 @@ namespace Assets.Scripts.Factories
 
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
-            rb.AddForce(direction * speed, ForceMode2D.Impulse);
+            rb.AddForce(direction.normalized * speed, ForceMode2D.Impulse);
 
             ScoreSubscriber.SubscribeScoreCounter(clone);
         }
@@ -73,7 +73,7 @@ namespace Assets.Scripts.Factories
             InitSpawnParameters(collider, ref position, ref direction);
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
-            rb.AddForce(direction * speed, ForceMode2D.Impulse);
+            rb.AddForce(direction.normalized * speed, ForceMode2D.Impulse);
 
             ScoreSubscriber.SubscribeScoreCounter(clone);
         }

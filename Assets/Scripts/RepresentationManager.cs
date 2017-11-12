@@ -42,8 +42,7 @@ public class RepresentationManager : MonoBehaviour
                 if (child.tag != "SpriteRepresentation" && child.tag != "VectorRepresentation")
                     continue;
 
-                child.gameObject.SetActive(child.tag == "SpriteRepresentation"
-                                           ^ (int)representation == (int)Representation.Sprite);
+                child.gameObject.SetActive(IsActive(child.tag));
             }
         }
     }
@@ -66,10 +65,22 @@ public class RepresentationManager : MonoBehaviour
                     if (represent.tag != "SpriteRepresentation" && represent.tag != "VectorRepresentation")
                         continue;
 
-                    represent.gameObject.SetActive(represent.tag == "SpriteRepresentation"
-                                                   ^ (int)representation == (int)Representation.Sprite);
+                    represent.gameObject.SetActive(IsActive(represent.tag));
                 }
             }
         }
+    }
+
+    private bool IsActive(string tag)
+    {
+        /* tag  represent | active
+         * -----------------------
+         * vec     vec    |   1
+         * vec     spr    |   0
+         * spr     vec    |   0
+         * spr     spr    |   1
+         */
+        return (tag == "SpriteRepresentation")
+                == ((int)representation == (int)Representation.Sprite);
     }
 }
