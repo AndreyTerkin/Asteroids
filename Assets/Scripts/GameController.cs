@@ -5,10 +5,9 @@ using Assets.Scripts.Factories;
 
 public class GameController : MonoBehaviour
 {
-    public float asteroidSpeed = 3.0f;
     public Text scorePanel;
     public GameObject menu;
-    public int score;
+    public float asteroidSpeed = 3.0f;
     public RectTransform laserAccumulatorCharge;
 
     [SerializeField]
@@ -30,11 +29,14 @@ public class GameController : MonoBehaviour
 
     private int waveNum;
     private int enemiesPerWave;
+    private int score;
 
     private void Start()
     {
         waveNum = 0;
         enemiesPerWave = 10;
+        score = 0;
+        UpdateScore(0);
 
         representationManager = GetComponent<RepresentationManager>();
         player = representationManager.GetGameObjectOfType<Player>();
@@ -133,8 +135,6 @@ public class GameController : MonoBehaviour
 
     public void RestartGame()
     {
-        score = 0;
-        UpdateScore(0);
         DestroyObjectsOfTag("Player");
         DestroyObjectsOfTag("Space object");
         DestroyObjectsOfTag("Weapon");

@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class RepresentationManager : MonoBehaviour
 {
-    public Transform backgound;
     public List<GameObject> multiRepresentableObjects;
 
     public enum Representation : int
