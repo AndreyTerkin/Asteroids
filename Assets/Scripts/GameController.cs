@@ -31,11 +31,8 @@ public class GameController : MonoBehaviour
     private int waveNum;
     private int enemiesPerWave;
 
-    private bool restartFlag;
-
-    void Start()
+    private void Start()
     {
-        restartFlag = false;
         waveNum = 0;
         enemiesPerWave = 10;
 
@@ -57,6 +54,7 @@ public class GameController : MonoBehaviour
             Player playerScript = instance.GetComponent<Player>();
             if (playerScript)
             {
+                UpdateLaserAccumulatorDisplay(1, 1); // Reset value
                 playerScript.LaserChargeChangedEvent += UpdateLaserAccumulatorDisplay;
                 (playerScript as SpaceObject).SpaceObjectDestroyedEvent += GameOver;
             }
@@ -69,17 +67,6 @@ public class GameController : MonoBehaviour
             StartCoroutine(SpawnUfo());
     }
 
-    void Update()
-    {
-        if (restartFlag)
-        {
-            DestroyObjectsOfTag("Player");
-            DestroyObjectsOfTag("Space object");
-            DestroyObjectsOfTag("Weapon");
-            Start();
-        }
-    }
-
     private void DestroyObjectsOfTag(string tag)
     {
         var objects = GameObject.FindGameObjectsWithTag(tag);
@@ -89,7 +76,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnAsteroid()
+    private IEnumerator SpawnAsteroid()
     {
         while (true)
         {
@@ -105,7 +92,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnUfo()
+    private IEnumerator SpawnUfo()
     {
         while (true)
         {
@@ -127,7 +114,7 @@ public class GameController : MonoBehaviour
         scorePanel.text = "Score: " + score;
     }
 
-    public void UpdateLaserAccumulatorDisplay(int charge, int maxCharge)
+    private void UpdateLaserAccumulatorDisplay(int charge, int maxCharge)
     {
         if (laserAccumulatorCharge == null)
             return;
@@ -146,7 +133,12 @@ public class GameController : MonoBehaviour
 
     public void RestartGame()
     {
-        restartFlag = true;
+        score = 0;
+        UpdateScore(0);
+        DestroyObjectsOfTag("Player");
+        DestroyObjectsOfTag("Space object");
+        DestroyObjectsOfTag("Weapon");
+        Start();
     }
 
     public void ChangeGameView()

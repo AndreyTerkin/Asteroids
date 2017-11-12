@@ -106,7 +106,7 @@ public class Player : SpaceObject
             return;
 
         GameObject shot = Instantiate(bullet, shooter.position, shooter.rotation);
-        shot.transform.parent = gameObject.transform;
+        shot.transform.parent = gameObject.transform.parent;
         previousShot = Time.time + firePeriod;
     }
 
@@ -116,7 +116,7 @@ public class Player : SpaceObject
             return;
 
         GameObject shot = Instantiate(laserBolt, shooter.position, shooter.rotation);
-        shot.transform.parent = gameObject.transform;
+        shot.transform.parent = gameObject.transform.parent;
 
         previousShot = Time.time + firePeriod;
         laserAccumulator -= laserShotCost;

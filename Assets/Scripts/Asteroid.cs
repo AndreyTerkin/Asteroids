@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Assets.Scripts.Factories;
 
 public class Asteroid : SpaceObject

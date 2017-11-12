@@ -7,24 +7,12 @@ namespace Assets.Scripts.Factories
         protected Transform transform;
         protected Border border;
 
-        private static float _errorOffset = 0.25f;
+        private static float errorOffset = 0.25f;
 
         public SpaceObjectFactory(Transform transform, Border border)
         {
-            transform = transform;
-            border = border;
-        }
-
-        public ScoreSubscriber ScoreSubscriber
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
+            this.transform = transform;
+            this.border = border;
         }
 
         /// <summary>
@@ -39,25 +27,6 @@ namespace Assets.Scripts.Factories
                 return;
 
             Vector2 direction = new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
-            GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
-            Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
-            rb.AddForce(direction.normalized * speed, ForceMode2D.Impulse);
-
-            ScoreSubscriber.SubscribeScoreCounter(clone);
-        }
-
-        /// <summary>
-        /// Instantiate gameObject clone with given position, direction and speed
-        /// </summary>
-        /// <param name="gameObject">GameObject instance to clone</param>
-        /// <param name="position"></param>
-        /// <param name="direction"></param>
-        /// <param name="speed"></param>
-        public static void Create(GameObject gameObject, Vector3 position, Vector2 direction, float speed)
-        {
-            if (gameObject == null)
-                return;
-
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
             rb.AddForce(direction.normalized * speed, ForceMode2D.Impulse);
@@ -127,7 +96,7 @@ namespace Assets.Scripts.Factories
             else if (side >= 1 && side < 2) // bottom
             {
                 position = new Vector3(Random.Range(-border.borderXmax, border.borderXmax),
-                                       border.borderYmin - collider.size.y - _errorOffset,
+                                       border.borderYmin - collider.size.y - errorOffset,
                                        0.0f);
                 direction = transform.up + new Vector3(deflection, 0.0f);
             }
