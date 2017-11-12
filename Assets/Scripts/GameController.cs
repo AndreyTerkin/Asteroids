@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private float maxUfoSpawnTime = 12.0f;
 
-    private SpaceObjectFactory _spaceObjectFactory;
+    private SpaceObjectFactory spaceObjectFactory;
     private RepresentationManager representationManager;
 
     private Border border;
@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour
             }
         }
 
-        _spaceObjectFactory = new SpaceObjectFactory(transform, border);
+        spaceObjectFactory = new SpaceObjectFactory(transform, border);
         if (asteroid != null)
             StartCoroutine(SpawnAsteroid());
         if (ufo != null)
@@ -99,7 +99,7 @@ public class GameController : MonoBehaviour
             {
                 float time = Random.Range(minAsteroidSpawnTime / waveNum,
                                           maxAsteroidSpawnTime / waveNum);
-                _spaceObjectFactory.Create(asteroid, asteroidSpeed);
+                spaceObjectFactory.Create(asteroid, asteroidSpeed);
                 yield return new WaitForSeconds(time);
             }
         }
@@ -115,7 +115,7 @@ public class GameController : MonoBehaviour
             {
                 float time = Random.Range(minUfoSpawnTime / waveNum,
                                           maxUfoSpawnTime / waveNum);
-                _spaceObjectFactory.Create(ufo);
+                spaceObjectFactory.Create(ufo);
                 yield return new WaitForSeconds(time);
             }
         }

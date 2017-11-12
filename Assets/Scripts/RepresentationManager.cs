@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public enum Representation : int
-{
-    Sprite,
-    Vector
-}
-
 public class RepresentationManager : MonoBehaviour
 {
     public Transform backgound;
     public List<GameObject> multiRepresentableObjects;
 
+    public enum Representation : int
+    {
+        Sprite,
+        Vector
+    }
+
     private Representation representation;
-    public Representation Representation { get { return representation; } }
 
     void Awake()
     {

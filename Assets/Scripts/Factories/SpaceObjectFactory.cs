@@ -4,15 +4,27 @@ namespace Assets.Scripts.Factories
 {
     class SpaceObjectFactory : Object
     {
-        protected Transform _transform;
-        protected Border _border;
+        protected Transform transform;
+        protected Border border;
 
         private static float _errorOffset = 0.25f;
 
         public SpaceObjectFactory(Transform transform, Border border)
         {
-            _transform = transform;
-            _border = border;
+            transform = transform;
+            border = border;
+        }
+
+        public ScoreSubscriber ScoreSubscriber
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
+            }
         }
 
         /// <summary>
@@ -107,31 +119,31 @@ namespace Assets.Scripts.Factories
 
             if (side >= 0 && side < 1) // top
             {
-                position = new Vector3(Random.Range(-_border.borderXmax, _border.borderXmax),
-                                       _border.borderYmax + collider.size.y,
+                position = new Vector3(Random.Range(-border.borderXmax, border.borderXmax),
+                                       border.borderYmax + collider.size.y,
                                        0.0f);
-                direction = -_transform.up + new Vector3(deflection, 0.0f);
+                direction = -transform.up + new Vector3(deflection, 0.0f);
             }
             else if (side >= 1 && side < 2) // bottom
             {
-                position = new Vector3(Random.Range(-_border.borderXmax, _border.borderXmax),
-                                       _border.borderYmin - collider.size.y - _errorOffset,
+                position = new Vector3(Random.Range(-border.borderXmax, border.borderXmax),
+                                       border.borderYmin - collider.size.y - _errorOffset,
                                        0.0f);
-                direction = _transform.up + new Vector3(deflection, 0.0f);
+                direction = transform.up + new Vector3(deflection, 0.0f);
             }
             else if (side >= 2 && side < 3) // right
             {
-                position = new Vector3(_border.borderXmax + collider.size.x,
-                                       Random.Range(-_border.borderYmax, _border.borderYmax),
+                position = new Vector3(border.borderXmax + collider.size.x,
+                                       Random.Range(-border.borderYmax, border.borderYmax),
                                        0.0f);
-                direction = -_transform.right + new Vector3(0.0f, deflection);
+                direction = -transform.right + new Vector3(0.0f, deflection);
             }
             else if (side >= 3 && side < 4) // left
             {
-                position = new Vector3(_border.borderXmin - collider.size.x,
-                                       Random.Range(-_border.borderYmax, _border.borderYmax),
+                position = new Vector3(border.borderXmin - collider.size.x,
+                                       Random.Range(-border.borderYmax, border.borderYmax),
                                        0.0f);
-                direction = _transform.right + new Vector3(0.0f, deflection);
+                direction = transform.right + new Vector3(0.0f, deflection);
             }
         }
 

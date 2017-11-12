@@ -9,9 +9,6 @@ public class Player : SpaceObject
     public delegate void LaserChargeChanged(int charge, int maxCharge);
     public event LaserChargeChanged LaserChargeChangedEvent;
 
-    private Rigidbody2D rb;
-    private Transform representation;
-
     [SerializeField]
     private float speed = 7.0f;
     [SerializeField]
@@ -21,15 +18,17 @@ public class Player : SpaceObject
     [SerializeField]
     private GameObject laserBolt;
 
+    public int maxLaserAccumulatorCharge = 200;
+    public int laserShotCost = 120;
+    public int laserAccumulatorChargeSpeed = 1;
+
     private Border border;
+    private Rigidbody2D rb;
+    private Transform representation;
 
     private float firePeriod = 0.3f;
     private float previousShot = 0.0f;
-
-    public int maxLaserAccumulatorCharge = 200;
     private int laserAccumulator;
-    public int laserShotCost = 120;
-    public int laserAccumulatorChargeSpeed = 1;
 
     void Awake ()
     {

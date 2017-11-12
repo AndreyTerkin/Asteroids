@@ -8,7 +8,7 @@ public class Ufo : SpaceObject
     [SerializeField]
     private int scoreForDestroy = 3;
 
-    private Vector3 _aimPosition;
+    private Vector3 aimPosition;
 
     protected void Start()
     {
@@ -20,13 +20,13 @@ public class Ufo : SpaceObject
     void FixedUpdate()
     {
         transform.position = Vector3.MoveTowards(transform.position,
-                                                 _aimPosition,
+                                                 aimPosition,
                                                  speed * Time.deltaTime);
     }
 
     private void ChangeDirection(Vector3 position)
     {
-        _aimPosition = position;
+        aimPosition = position;
     }
 
     protected override void Explode()
