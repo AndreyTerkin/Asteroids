@@ -21,7 +21,6 @@ public class RepresentationManager : MonoBehaviour
         representation = PlayerPrefs.GetInt("Representation", -1) == -1
             ? Representation.Sprite
             : (Representation)PlayerPrefs.GetInt("Representation");
-        //representation = Representation.Sprite;
 
         UpdateRepresentaion();
     }
@@ -33,6 +32,20 @@ public class RepresentationManager : MonoBehaviour
             : Representation.Sprite;
 
         UpdateRepresentaion();
+
+        var representations = GameObject.FindGameObjectsWithTag("Representation");
+        foreach (var obj in representations)
+        {
+            for (int i = 0; i < obj.transform.childCount; i++)
+            {
+                var child = obj.transform.GetChild(i);
+                if (child.tag != "SpriteRepresentation" && child.tag != "VectorRepresentation")
+                    continue;
+
+                child.gameObject.SetActive(child.tag == "SpriteRepresentation"
+                                           ^ (int)representation == (int)Representation.Sprite);
+            }
+        }
     }
 
     private void UpdateRepresentaion()
