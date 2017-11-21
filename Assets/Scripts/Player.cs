@@ -3,9 +3,6 @@ using System.Collections;
 
 public class Player : SpaceObject
 {
-    public delegate void PositionChanged(Vector3 position);
-    public event PositionChanged PositionChangedEvent;
-
     public delegate void LaserChargeChanged(int charge, int maxCharge);
     public event LaserChargeChanged LaserChargeChangedEvent;
 
@@ -54,8 +51,7 @@ public class Player : SpaceObject
         rb.position = new Vector2(Mathf.Clamp(rb.position.x, border.borderXmin, border.borderXmax),
                                   Mathf.Clamp(rb.position.y, border.borderYmin, border.borderYmax));
 
-        if (PositionChangedEvent != null)
-            PositionChangedEvent(transform.position);
+        OnPositionChanged(transform.position);
 
         if (laserAccumulator < maxLaserAccumulatorCharge)
         {

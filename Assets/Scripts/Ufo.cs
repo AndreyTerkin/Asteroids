@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Movers;
 
 public class Ufo : SpaceObject
 {
@@ -8,25 +9,19 @@ public class Ufo : SpaceObject
     [SerializeField]
     private int scoreForDestroy = 3;
 
-    private Vector3 aimPosition;
+    private IMovable mover;
 
     protected void Start()
     {
         Player player = FindObjectOfType<Player>();
-        if (player)
-            player.PositionChangedEvent += ChangeDirection;
+        if (player != null)
+            mover = new MoverRelativeConstantAim(player, speed);
     }
 
     void FixedUpdate()
     {
-        transform.position = Vector3.MoveTowards(transform.position,
-                                                 aimPosition,
-                                                 speed * Time.deltaTime);
-    }
-
-    private void ChangeDirection(Vector3 position)
-    {
-        aimPosition = position;
+        if (mover != null)
+            transform.position = mover.UpdatePosition(transform.position);
     }
 
     protected override void Explode()

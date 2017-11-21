@@ -5,6 +5,9 @@ public class SpaceObject : MonoBehaviour
     public delegate void SpaceObjectDestroyed(int score);
     public event SpaceObjectDestroyed SpaceObjectDestroyedEvent;
 
+    public delegate void PositionChanged(Vector3 position);
+    public event PositionChanged PositionChangedEvent;
+
     protected virtual void Explode()
     {
         // TODO: show explode
@@ -30,6 +33,15 @@ public class SpaceObject : MonoBehaviour
         if (handler != null)
         {
             handler(score);
+        }
+    }
+
+    protected virtual void OnPositionChanged(Vector3 position)
+    {
+        PositionChanged handler = PositionChangedEvent;
+        if (handler != null)
+        {
+            handler(position);
         }
     }
 }
