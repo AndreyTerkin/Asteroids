@@ -12,11 +12,16 @@ public class Asteroid : SpaceObject
     [SerializeField]
     private int scoreForDestroy = 2;
 
+    private void FixedUpdate()
+    {
+        OnPositionChanged(transform.position);
+    }
+
     protected override void Explode()
     {
         for (int i = 0; i < fragmentCount; ++i)
         {
-            if (fragment == null)
+            if (fragment == null) 
                 continue;
 
             SpaceObjectFactory.Create(fragment, transform.position, asteroidFragmentSpeed);
