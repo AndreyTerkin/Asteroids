@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-public class AsteroidFragment : SpaceObject
+public class AsteroidFragment : EngineSpaceObject
 {
     [SerializeField]
     private int scoreForDestroy = 1;
 
-    protected override void Explode()
+    public override void Explode()
     {
-        base.Explode();
-        base.OnSpaceObjectDestroyed(scoreForDestroy);
+        SpaceObject.OnSpaceObjectDestroyed(scoreForDestroy);
+        Destroy(gameObject);
     }
 }

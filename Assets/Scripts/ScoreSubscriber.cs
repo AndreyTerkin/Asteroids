@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using AsteroidsLibrary.SpaceObjects;
 
 namespace Assets.Scripts
 {
@@ -19,8 +20,9 @@ namespace Assets.Scripts
             if (gameController == null)
                 return;
 
-            SpaceObject spaceObject = gameObject.GetComponent<SpaceObject>();
-            spaceObject.SpaceObjectDestroyedEvent += gameController.UpdateScore;
+            ISpaceObject spaceObject = gameObject.GetComponent<ISpaceObject>();
+            if (spaceObject != null)
+                spaceObject.SpaceObject.SpaceObjectDestroyedEvent += gameController.UpdateScore;
         }
     }
 }

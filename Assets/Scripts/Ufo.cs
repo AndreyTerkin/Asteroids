@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Assets.Scripts.Movers;
 
-public class Ufo : SpaceObject
+public class Ufo : EngineSpaceObject
 {
     [SerializeField]
     private float speed = 2.0f;
@@ -13,9 +12,9 @@ public class Ufo : SpaceObject
 
     protected void Start()
     {
-        Player player = FindObjectOfType<Player>();
-        if (player != null)
-            mover = new MoverRelativeNearestObject(typeof(Asteroid), speed);
+        //Player player = FindObjectOfType<Player>();
+        //if (player != null)
+        //    mover = new MoverRelativeNearestObject(typeof(Asteroid), speed);
     }
 
     void FixedUpdate()
@@ -24,9 +23,9 @@ public class Ufo : SpaceObject
             transform.position = mover.UpdatePosition(transform.position);
     }
 
-    protected override void Explode()
+    public override void Explode()
     {
-        base.OnSpaceObjectDestroyed(scoreForDestroy);
-        base.Explode();
+        SpaceObject.OnSpaceObjectDestroyed(scoreForDestroy);
+        Destroy(gameObject);
     }
 }

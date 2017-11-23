@@ -12,13 +12,13 @@ namespace Assets.Scripts.Movers
         /// </summary>
         /// <param name="aim">Space object for relative movement of mover</param>
         /// <param name="speed">Movement speed. Positive means movement towards aim, negative - away from aim</param>
-        public MoverRelativeConstantAim(SpaceObject aim, float speed)
-        {
-            this.speed = speed;
+        //public MoverRelativeConstantAim(SpaceObject aim, float speed)
+        //{
+        //    this.speed = speed;
 
-            if (aim)
-                aim.PositionChangedEvent += ChangeDirection;
-        }
+        //    if (aim)
+        //        aim.PositionChangedEvent += ChangeDirection;
+        //}
 
         public Vector3 UpdatePosition(Vector3 currentPosition)
         {

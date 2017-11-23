@@ -58,7 +58,7 @@ public class GameController : MonoBehaviour
             {
                 UpdateLaserAccumulatorDisplay(1, 1); // Reset value
                 playerScript.LaserChargeChangedEvent += UpdateLaserAccumulatorDisplay;
-                playerScript.spaceObject.SpaceObjectDestroyedEvent += GameOver;
+                playerScript.SpaceObject.SpaceObjectDestroyedEvent += GameOver;
             }
         }
 
@@ -104,7 +104,7 @@ public class GameController : MonoBehaviour
             {
                 float time = Random.Range(minUfoSpawnTime / waveNum,
                                           maxUfoSpawnTime / waveNum);
-                spaceObjectFactory.Create(ufo);
+                spaceObjectFactory.Create(ufo, 2.0f);
                 yield return new WaitForSeconds(time);
             }
         }

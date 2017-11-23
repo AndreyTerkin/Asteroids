@@ -1,0 +1,31 @@
+﻿using AsteroidsLibrary.SpaceObjects;
+using UnityEngine;
+
+public class EngineSpaceObject : MonoBehaviour, ISpaceObject
+{
+    public SpaceObject SpaceObject { get; protected set; }
+
+    protected virtual void Awake()
+    {
+        SpaceObject = new SpaceObject();
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D collider)
+    {
+        // TODO: place for improvement
+        if (collider.transform.parent != null && collider.transform.parent.parent != null)
+        {
+            var colliderParent = collider.transform.parent.parent;
+            if (colliderParent.tag == "Weapon" || colliderParent.tag == "Player")
+            {
+                Explode();
+            }
+        }
+    }
+
+    public virtual void Explode()
+    {
+        SpaceObject.OnSpaceObjectDestroyed(0);
+        Destroy(gameObject);
+    }
+}

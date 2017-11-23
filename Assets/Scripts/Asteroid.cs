@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Assets.Scripts.Factories;
 
-public class Asteroid : SpaceObject
+public class Asteroid : EngineSpaceObject
 {
     public GameObject fragment;
 
@@ -14,10 +14,10 @@ public class Asteroid : SpaceObject
 
     private void FixedUpdate()
     {
-        OnPositionChanged(transform.position);
+        SpaceObject.OnPositionChanged(transform.position);
     }
 
-    protected override void Explode()
+    public override void Explode()
     {
         for (int i = 0; i < fragmentCount; ++i)
         {
@@ -26,7 +26,7 @@ public class Asteroid : SpaceObject
 
             SpaceObjectFactory.Create(fragment, transform.position, asteroidFragmentSpeed);
         }
-        base.OnSpaceObjectDestroyed(scoreForDestroy);
-        base.Explode();
+        SpaceObject.OnSpaceObjectDestroyed(scoreForDestroy);
+        Destroy(gameObject);
     }
 }
