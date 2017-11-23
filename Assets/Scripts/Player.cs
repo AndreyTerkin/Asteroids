@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using AsteroidsLibrary.SpaceObjects;
 
-public class Player : SpaceObject
+public class Player : MonoBehaviour
 {
     public delegate void LaserChargeChanged(int charge, int maxCharge);
     public event LaserChargeChanged LaserChargeChangedEvent;
@@ -27,8 +27,12 @@ public class Player : SpaceObject
     private float previousShot = 0.0f;
     private int laserAccumulator;
 
+    public AsteroidsLibrary.SpaceObjects.SpaceObject spaceObject;
+
     void Awake ()
     {
+        spaceObject = new AsteroidsLibrary.SpaceObjects.SpaceObject();
+
         representation = transform.Find("Representation");
         rb = GetComponent<Rigidbody2D>();
     }
@@ -51,7 +55,7 @@ public class Player : SpaceObject
         rb.position = new Vector2(Mathf.Clamp(rb.position.x, border.borderXmin, border.borderXmax),
                                   Mathf.Clamp(rb.position.y, border.borderYmin, border.borderYmax));
 
-        OnPositionChanged(transform.position);
+        spaceObject.OnPositionChanged(transform.position);
 
         if (laserAccumulator < maxLaserAccumulatorCharge)
         {
@@ -120,19 +124,14 @@ public class Player : SpaceObject
             LaserChargeChangedEvent(laserAccumulator, maxLaserAccumulatorCharge);
     }
 
-    protected override void OnTriggerEnter2D(Collider2D collider)
+    protected void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.transform.parent != null
             && collider.transform.parent.parent != null
             && collider.transform.parent.parent.tag == "Space object")
         {
-            Explode();
+            spaceObject.OnSpaceObjectDestroyed(0);
+            Destroy(gameObject);
         }
-    }
-
-    protected override void Explode()
-    {
-        base.OnSpaceObjectDestroyed(0);
-        base.Explode();
     }
 }

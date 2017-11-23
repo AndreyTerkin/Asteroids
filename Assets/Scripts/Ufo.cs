@@ -15,7 +15,7 @@ public class Ufo : SpaceObject
     {
         Player player = FindObjectOfType<Player>();
         if (player != null)
-            mover = new MoverRelativeConstantAim(player, speed);
+            mover = new MoverRelativeNearestObject(typeof(Asteroid), speed);
     }
 
     void FixedUpdate()

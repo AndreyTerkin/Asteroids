@@ -58,7 +58,7 @@ public class GameController : MonoBehaviour
             {
                 UpdateLaserAccumulatorDisplay(1, 1); // Reset value
                 playerScript.LaserChargeChangedEvent += UpdateLaserAccumulatorDisplay;
-                (playerScript as SpaceObject).SpaceObjectDestroyedEvent += GameOver;
+                playerScript.spaceObject.SpaceObjectDestroyedEvent += GameOver;
             }
         }
 
