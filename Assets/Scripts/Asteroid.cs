@@ -12,9 +12,15 @@ public class Asteroid : EngineSpaceObject
     [SerializeField]
     private int scoreForDestroy = 2;
 
+    public override int ScoresForDestroy
+    {
+        get { return scoreForDestroy; }
+        set { scoreForDestroy = value; }
+    }
+
     private void FixedUpdate()
     {
-        SpaceObject.OnPositionChanged(transform.position);
+        SpaceObject.OnPositionChanged(this, transform.position);
     }
 
     public override void Explode()
@@ -26,7 +32,7 @@ public class Asteroid : EngineSpaceObject
 
             SpaceObjectFactory.Create(fragment, transform.position, asteroidFragmentSpeed);
         }
-        SpaceObject.OnSpaceObjectDestroyed(scoreForDestroy);
+        SpaceObject.OnSpaceObjectDestroyed(this, scoreForDestroy);
         Destroy(gameObject);
     }
 }

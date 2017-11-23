@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.UI;
 using Assets.Scripts.Factories;
+using AsteroidsLibrary.SpaceObjects;
 
 public class GameController : MonoBehaviour
 {
@@ -36,7 +37,7 @@ public class GameController : MonoBehaviour
         waveNum = 0;
         enemiesPerWave = 10;
         score = 0;
-        UpdateScore(0);
+        UpdateScore(this, null);
 
         representationManager = GetComponent<RepresentationManager>();
         player = representationManager.GetGameObjectOfType<Player>();
@@ -104,15 +105,16 @@ public class GameController : MonoBehaviour
             {
                 float time = Random.Range(minUfoSpawnTime / waveNum,
                                           maxUfoSpawnTime / waveNum);
-                spaceObjectFactory.Create(ufo, 2.0f);
+                spaceObjectFactory.Create(ufo);
                 yield return new WaitForSeconds(time);
             }
         }
     }
 
-    public void UpdateScore(int scoreIncrement)
+    public void UpdateScore(object sender, SpaceObjectDestroyedEventArgs e)
     {
-        score += scoreIncrement;
+        if (e != null)
+            score += e.ScoresForDestroy;
         scorePanel.text = "Score: " + score;
     }
 
@@ -126,7 +128,7 @@ public class GameController : MonoBehaviour
 
     // TODO: replace score to DestroyedEventArgs class or something,
     // because score isn't used here
-    public void GameOver(int score)
+    public void GameOver(object sender, SpaceObjectDestroyedEventArgs e)
     {
         StopAllCoroutines();
         if (menu != null)

@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using AsteroidsLibrary.SpaceObjects;
 
 namespace Assets.Scripts.Movers
 {
-    class MoverRelativeConstantAim : IMovable
+    /*class MoverRelativeConstantAim : IMovable
     {
         private float speed;
         private Vector3 aimPosition;
@@ -12,13 +13,13 @@ namespace Assets.Scripts.Movers
         /// </summary>
         /// <param name="aim">Space object for relative movement of mover</param>
         /// <param name="speed">Movement speed. Positive means movement towards aim, negative - away from aim</param>
-        //public MoverRelativeConstantAim(SpaceObject aim, float speed)
-        //{
-        //    this.speed = speed;
+        public MoverRelativeConstantAim(SpaceObject aim, float speed)
+        {
+            this.speed = speed;
 
-        //    if (aim)
-        //        aim.PositionChangedEvent += ChangeDirection;
-        //}
+            if (aim != null)
+                aim.PositionChangedEvent += ChangeDirection;
+        }
 
         public Vector3 UpdatePosition(Vector3 currentPosition)
         {
@@ -31,5 +32,5 @@ namespace Assets.Scripts.Movers
         {
             aimPosition = endPosition;
         }
-    }
+    }*/
 }

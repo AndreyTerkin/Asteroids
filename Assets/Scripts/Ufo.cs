@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Assets.Scripts.Movers;
+using AsteroidsLibrary.Movers;
 
 public class Ufo : EngineSpaceObject
 {
@@ -10,22 +10,22 @@ public class Ufo : EngineSpaceObject
 
     private IMovable mover;
 
+    public override int ScoresForDestroy
+    {
+        get { return scoreForDestroy; }
+        set { scoreForDestroy = value; }
+    }
+
     protected void Start()
     {
-        //Player player = FindObjectOfType<Player>();
-        //if (player != null)
-        //    mover = new MoverRelativeNearestObject(typeof(Asteroid), speed);
+        Player player = FindObjectOfType<Player>();
+        if (player != null)
+            mover = new MoverRelativeConstantAim(player.SpaceObject, speed);
     }
 
     void FixedUpdate()
     {
         if (mover != null)
             transform.position = mover.UpdatePosition(transform.position);
-    }
-
-    public override void Explode()
-    {
-        SpaceObject.OnSpaceObjectDestroyed(scoreForDestroy);
-        Destroy(gameObject);
     }
 }

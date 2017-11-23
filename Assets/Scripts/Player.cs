@@ -52,7 +52,7 @@ public class Player : EngineSpaceObject
         rb.position = new Vector2(Mathf.Clamp(rb.position.x, border.borderXmin, border.borderXmax),
                                   Mathf.Clamp(rb.position.y, border.borderYmin, border.borderYmax));
 
-        SpaceObject.OnPositionChanged(transform.position);
+        SpaceObject.OnPositionChanged(this, transform.position);
 
         if (laserAccumulator < maxLaserAccumulatorCharge)
         {
@@ -129,11 +129,5 @@ public class Player : EngineSpaceObject
         {
             Explode();
         }
-    }
-
-    public override void Explode()
-    {
-        SpaceObject.OnSpaceObjectDestroyed(0);
-        Destroy(gameObject);
     }
 }

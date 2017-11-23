@@ -5,9 +5,9 @@ public class AsteroidFragment : EngineSpaceObject
     [SerializeField]
     private int scoreForDestroy = 1;
 
-    public override void Explode()
+    public override int ScoresForDestroy
     {
-        SpaceObject.OnSpaceObjectDestroyed(scoreForDestroy);
-        Destroy(gameObject);
+        get { return scoreForDestroy; }
+        set { scoreForDestroy = value; }
     }
 }

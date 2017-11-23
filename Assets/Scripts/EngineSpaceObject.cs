@@ -4,6 +4,7 @@ using UnityEngine;
 public class EngineSpaceObject : MonoBehaviour, ISpaceObject
 {
     public SpaceObject SpaceObject { get; protected set; }
+    public virtual int ScoresForDestroy { get; set; }
 
     protected virtual void Awake()
     {
@@ -25,7 +26,7 @@ public class EngineSpaceObject : MonoBehaviour, ISpaceObject
 
     public virtual void Explode()
     {
-        SpaceObject.OnSpaceObjectDestroyed(0);
+        SpaceObject.OnSpaceObjectDestroyed(this, ScoresForDestroy);
         Destroy(gameObject);
     }
 }
