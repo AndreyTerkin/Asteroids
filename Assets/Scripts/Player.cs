@@ -49,8 +49,8 @@ public class Player : EngineSpaceObject
         if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
             Turn();
 
-        rb.position = new Vector2(Mathf.Clamp(rb.position.x, border.borderXmin, border.borderXmax),
-                                  Mathf.Clamp(rb.position.y, border.borderYmin, border.borderYmax));
+        rb.position = new Vector2(Mathf.Clamp(rb.position.x, border.xMin, border.xMax),
+                                  Mathf.Clamp(rb.position.y, border.yMin, border.yMax));
 
         SpaceObject.OnPositionChanged(this, transform.position);
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using Assets.Scripts.Factories;
+using AsteroidsLibrary;
 using AsteroidsLibrary.SpaceObjects;
 
 public class GameController : MonoBehaviour
@@ -31,6 +32,8 @@ public class GameController : MonoBehaviour
     private int waveNum;
     private int enemiesPerWave;
     private int score;
+
+    private Game gameInstance;
 
     private void Start()
     {
@@ -64,10 +67,33 @@ public class GameController : MonoBehaviour
         }
 
         spaceObjectFactory = new SpaceObjectFactory(transform, border);
-        if (asteroid != null)
-            StartCoroutine(SpawnAsteroid());
-        if (ufo != null)
-            StartCoroutine(SpawnUfo());
+
+        gameInstance = new Game();
+        gameInstance.SpaceObjectSpawnEvent += SpawnObject;
+        gameInstance.StartSpawnObjects();
+    }
+
+    private void OnDestroy()
+    {
+        gameInstance.SpaceObjectSpawnEvent -= SpawnObject;
+        gameInstance.StopGame();
+    }
+
+    private void SpawnObject(object sender, SpaceObjectSpawnEventArgs e)
+    {
+        switch (e.ObjectType)
+        {
+            case SpaceObjectTypes.Asteroid:
+                if (asteroid != null)
+                    spaceObjectFactory.Create(asteroid, asteroidSpeed);
+                break;
+            case SpaceObjectTypes.Ufo:
+                if (ufo != null)
+                    spaceObjectFactory.Create(ufo);
+                break;
+            default:
+                break;
+        }
     }
 
     private void DestroyObjectsOfTag(string tag)
@@ -76,38 +102,6 @@ public class GameController : MonoBehaviour
         foreach (var obj in objects)
         {
             Destroy(obj);
-        }
-    }
-
-    private IEnumerator SpawnAsteroid()
-    {
-        while (true)
-        {
-            waveNum++;
-
-            for (int i = 0; i < enemiesPerWave * waveNum; i++)
-            {
-                float time = Random.Range(minAsteroidSpawnTime / waveNum,
-                                          maxAsteroidSpawnTime / waveNum);
-                spaceObjectFactory.Create(asteroid, asteroidSpeed);
-                yield return new WaitForSeconds(time);
-            }
-        }
-    }
-
-    private IEnumerator SpawnUfo()
-    {
-        while (true)
-        {
-            waveNum++;
-
-            for (int i = 0; i < enemiesPerWave * waveNum; i++)
-            {
-                float time = Random.Range(minUfoSpawnTime / waveNum,
-                                          maxUfoSpawnTime / waveNum);
-                spaceObjectFactory.Create(ufo);
-                yield return new WaitForSeconds(time);
-            }
         }
     }
 
@@ -131,6 +125,8 @@ public class GameController : MonoBehaviour
     public void GameOver(object sender, SpaceObjectDestroyedEventArgs e)
     {
         StopAllCoroutines();
+        gameInstance.SpaceObjectSpawnEvent -= SpawnObject;
+        gameInstance.StopGame();
         if (menu != null)
             menu.SetActive(true);
     }

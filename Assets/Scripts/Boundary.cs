@@ -30,8 +30,8 @@ public class Boundary : MonoBehaviour
 [System.Serializable]
 public struct Border
 {
-    public float borderXmin;
-    public float borderXmax;
-    public float borderYmin;
-    public float borderYmax;
+    public float xMin;
+    public float xMax;
+    public float yMin;
+    public float yMax;
 }
