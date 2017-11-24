@@ -65,16 +65,31 @@ public class GameController : MonoBehaviour
         }
 
         spaceObjectFactory = new SpaceObjectFactory(transform, border);
+        ConfigureServer();
+    }
 
+    private void ConfigureServer()
+    {
         Game.GetInstance().SpaceObjectSpawnEvent += SpawnObject;
-        Game.GetInstance().MessageDelegateEvent += (string text) => { Debug.Log(text); };
+        Game.GetInstance().MessageDelegateEvent += PrintServerMessage;
         Game.GetInstance().StartSpawnObjects();
+    }
+
+    private void ResetServer()
+    {
+        Game.GetInstance().SpaceObjectSpawnEvent -= SpawnObject;
+        Game.GetInstance().MessageDelegateEvent -= PrintServerMessage;
+        Game.GetInstance().StopGame();
     }
 
     private void OnDestroy()
     {
-        Game.GetInstance().SpaceObjectSpawnEvent -= SpawnObject;
-        Game.GetInstance().StopGame();
+        ResetServer();
+    }
+
+    private void PrintServerMessage(string message)
+    {
+        Debug.Log(message);
     }
 
     private void SpawnObject(object sender, SpaceObjectSpawnEventArgs e)
@@ -120,8 +135,7 @@ public class GameController : MonoBehaviour
 
     public void GameOver(object sender, SpaceObjectDestroyedEventArgs e)
     {
-        Game.GetInstance().SpaceObjectSpawnEvent -= SpawnObject;
-        Game.GetInstance().StopGame();
+        ResetServer();
         if (menu != null)
             menu.SetActive(true);
     }
@@ -131,8 +145,6 @@ public class GameController : MonoBehaviour
         DestroyObjectsOfTag("Player");
         DestroyObjectsOfTag("Space object");
         DestroyObjectsOfTag("Weapon");
-        Game.GetInstance().SpaceObjectSpawnEvent -= SpawnObject;
-        Game.GetInstance().StopGame();
         Start();
     }
 
