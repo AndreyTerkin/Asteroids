@@ -33,8 +33,6 @@ public class GameController : MonoBehaviour
     private int enemiesPerWave;
     private int score;
 
-    private Game gameInstance;
-
     private void Start()
     {
         waveNum = 0;
@@ -68,16 +66,15 @@ public class GameController : MonoBehaviour
 
         spaceObjectFactory = new SpaceObjectFactory(transform, border);
 
-        gameInstance = new Game();
-        gameInstance.SpaceObjectSpawnEvent += SpawnObject;
-        gameInstance.MessageDelegateEvent += (string text) => { Debug.Log(text); };
-        gameInstance.StartSpawnObjects();
+        Game.GetInstance().SpaceObjectSpawnEvent += SpawnObject;
+        Game.GetInstance().MessageDelegateEvent += (string text) => { Debug.Log(text); };
+        Game.GetInstance().StartSpawnObjects();
     }
 
     private void OnDestroy()
     {
-        gameInstance.SpaceObjectSpawnEvent -= SpawnObject;
-        gameInstance.StopGame();
+        Game.GetInstance().SpaceObjectSpawnEvent -= SpawnObject;
+        Game.GetInstance().StopGame();
     }
 
     private void SpawnObject(object sender, SpaceObjectSpawnEventArgs e)
@@ -123,8 +120,8 @@ public class GameController : MonoBehaviour
 
     public void GameOver(object sender, SpaceObjectDestroyedEventArgs e)
     {
-        gameInstance.SpaceObjectSpawnEvent -= SpawnObject;
-        gameInstance.StopGame();
+        Game.GetInstance().SpaceObjectSpawnEvent -= SpawnObject;
+        Game.GetInstance().StopGame();
         if (menu != null)
             menu.SetActive(true);
     }
@@ -134,8 +131,8 @@ public class GameController : MonoBehaviour
         DestroyObjectsOfTag("Player");
         DestroyObjectsOfTag("Space object");
         DestroyObjectsOfTag("Weapon");
-        gameInstance.SpaceObjectSpawnEvent -= SpawnObject;
-        gameInstance.StopGame();
+        Game.GetInstance().SpaceObjectSpawnEvent -= SpawnObject;
+        Game.GetInstance().StopGame();
         Start();
     }
 
