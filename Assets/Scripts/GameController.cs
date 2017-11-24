@@ -70,6 +70,7 @@ public class GameController : MonoBehaviour
 
         gameInstance = new Game();
         gameInstance.SpaceObjectSpawnEvent += SpawnObject;
+        gameInstance.MessageDelegateEvent += (string text) => { Debug.Log(text); };
         gameInstance.StartSpawnObjects();
     }
 
@@ -120,11 +121,8 @@ public class GameController : MonoBehaviour
         laserAccumulatorCharge.localScale = new Vector2((float)charge / (float)maxCharge, 1.0f);
     }
 
-    // TODO: replace score to DestroyedEventArgs class or something,
-    // because score isn't used here
     public void GameOver(object sender, SpaceObjectDestroyedEventArgs e)
     {
-        StopAllCoroutines();
         gameInstance.SpaceObjectSpawnEvent -= SpawnObject;
         gameInstance.StopGame();
         if (menu != null)
@@ -136,6 +134,8 @@ public class GameController : MonoBehaviour
         DestroyObjectsOfTag("Player");
         DestroyObjectsOfTag("Space object");
         DestroyObjectsOfTag("Weapon");
+        gameInstance.SpaceObjectSpawnEvent -= SpawnObject;
+        gameInstance.StopGame();
         Start();
     }
 
