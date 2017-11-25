@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
 
 using AsteroidsLibrary.SpaceObjects;
-using AsteroidsLibrary.Movers;
 
 public class EngineSpaceObject : MonoBehaviour, ISpaceObject
 {
     [SerializeField]
     private float speed = 1.0f;
     [SerializeField]
-    private int scoreForDestroy = 1;
+    private int scoreForDestroy = 0;
 
-    public SpaceObject SpaceObject { get; set; }
+    public virtual SpaceObject SpaceObject { get; set; }
     public virtual Vector2 Size { get; set; }
 
     public virtual float Speed
@@ -23,11 +22,6 @@ public class EngineSpaceObject : MonoBehaviour, ISpaceObject
     {
         get { return scoreForDestroy; }
         set { scoreForDestroy = value; }
-    }
-
-    protected virtual void Awake()
-    {
-        SpaceObject = new SpaceObject();
     }
 
     protected virtual void FixedUpdate()

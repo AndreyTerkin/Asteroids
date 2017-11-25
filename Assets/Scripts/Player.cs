@@ -32,10 +32,8 @@ public class Player : EngineSpaceObject
         set { base.Speed = value; }
     }
 
-    protected override void Awake ()
+    protected void Awake ()
     {
-        base.Awake();
-
         representation = transform.Find("Representation");
         rb = GetComponent<Rigidbody2D>();
     }

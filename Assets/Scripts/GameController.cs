@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour
         if (boundary)
             border = boundary.border;
 
-        sceneObjectSpawner = new SceneObjectSpawner(player, asteroid, asteroidFragment, ufo);
+        sceneObjectSpawner = new SceneObjectSpawner(this, player, asteroid, asteroidFragment, ufo);
         ConfigureServer();
     }
 

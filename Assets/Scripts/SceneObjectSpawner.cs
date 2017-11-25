@@ -7,17 +7,20 @@ namespace Assets.Scripts
 {
     class SceneObjectSpawner : Object
     {
+        private GameController gameController;
         private GameObject player;
         private GameObject asteroid;
         private GameObject asteroidFragment;
         private GameObject ufo;
 
         public SceneObjectSpawner(
+            GameController gameController,
             GameObject player,
             GameObject asteroid,
             GameObject asteroidFragment,
             GameObject ufo)
         {
+            this.gameController = gameController;
             this.player = player;
             this.asteroid = asteroid;
             this.asteroidFragment = asteroidFragment;
@@ -29,7 +32,14 @@ namespace Assets.Scripts
             switch (e.Object.Type)
             {
                 case SpaceObjectTypes.Player:
-                    Create(player, e.Object, Vector3.zero);
+                    if (player != null)
+                    {
+                        GameObject clone = Create(player, e.Object, Vector3.zero);
+                        Player playerObj = clone.GetComponent<Player>();
+                        if (playerObj == null)
+                            break;
+                        playerObj.LaserChargeChangedEvent += gameController.UpdateLaserAccumulatorDisplay;
+                    }
                     break;
                 case SpaceObjectTypes.Asteroid:
                     if (asteroid != null)
@@ -67,7 +77,7 @@ namespace Assets.Scripts
         /// <param name="position"></param>
         /// <param name="direction"></param>
         /// <param name="speed"></param>
-        public static void Create(
+        public static GameObject Create(
             GameObject gameObject,
             SpaceObject spaceObject,
             Vector3 position,
@@ -75,13 +85,14 @@ namespace Assets.Scripts
             Vector2 direction)
         {
             if (gameObject == null)
-                return;
+                return null;
 
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
             rb.AddForce(direction.normalized * speed, ForceMode2D.Impulse);
             var obj = clone.GetComponent<ISpaceObject>();
             obj.SpaceObject = spaceObject;
+            return clone;
         }
 
         /// <summary>
@@ -89,14 +100,15 @@ namespace Assets.Scripts
         /// </summary>
         /// <param name="gameObject">GameObject instance to clone</param>
         /// <param name="position"></param>
-        public static void Create(GameObject gameObject, SpaceObject spaceObject, Vector3 position)
+        public static GameObject Create(GameObject gameObject, SpaceObject spaceObject, Vector3 position)
         {
             if (gameObject == null)
-                return;
+                return null;
 
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
             var obj = clone.GetComponent<ISpaceObject>();
             obj.SpaceObject = spaceObject;
+            return clone;
         }
     }
 }
