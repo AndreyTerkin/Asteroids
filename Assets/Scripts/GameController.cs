@@ -22,33 +22,26 @@ public class GameController : MonoBehaviour
     private GameObject asteroidFragment;
     private GameObject ufo;
 
-    private int score;
-
     private void Start()
     {
         gameInstance = Game.GetInstance();
 
-        score = 0;
-        UpdateScore(this, null);
+        UpdateScore(0);
 
         representationManager = GetComponent<RepresentationManager>();
         player = representationManager.multiRepresentableObjects[1];
         asteroid = representationManager.multiRepresentableObjects[3];
         asteroidFragment = representationManager.multiRepresentableObjects[4];
         ufo = representationManager.multiRepresentableObjects[2];
-        //player = representationManager.GetGameObjectOfType<Player>();
-        //asteroid = representationManager.GetGameObjectOfType<Asteroid>();
-        //asteroidFragment = representationManager.GetGameObjectOfType<AsteroidFragment>();
-        //ufo = representationManager.GetGameObjectOfType<Ufo>();
 
         if (menu != null)
             menu.SetActive(false);
 
+        UpdateLaserAccumulatorDisplay(1, 1); // Reset value
+
         Boundary boundary = FindObjectOfType<Boundary>();
         if (boundary)
             border = boundary.border;
-
-        UpdateLaserAccumulatorDisplay(1, 1); // Reset value
 
         sceneObjectSpawner = new SceneObjectSpawner(player, asteroid, asteroidFragment, ufo);
         ConfigureServer();
@@ -59,41 +52,23 @@ public class GameController : MonoBehaviour
         gameInstance.MessageDelegateEvent += PrintServerMessage;
         gameInstance.SetBorders(border);
 
-        Player playerScript = player.GetComponent<Player>();
-        gameInstance.AddUnit(SpaceObjectTypes.Player,
-            Vector2.one,
-            playerScript.Speed,
-            playerScript.ScoresForDestroy);
-
-        var asteroidCollider = GetCollider(asteroid);
-        EngineSpaceObject asteroidScript = asteroid.GetComponent<EngineSpaceObject>();
-        gameInstance.AddUnit(SpaceObjectTypes.Asteroid,
-            asteroidCollider.size,
-            asteroidScript.Speed,
-            asteroidScript.ScoresForDestroy);
-
-        var asteroidFragmentCollider = GetCollider(asteroidFragment);
-        EngineSpaceObject asteroidFragmentScript = asteroidFragment.GetComponent<EngineSpaceObject>();
-        gameInstance.AddUnit(SpaceObjectTypes.AsteroidFragment,
-            asteroidFragmentCollider.size,
-            asteroidFragmentScript.Speed,
-            asteroidFragmentScript.ScoresForDestroy);
-
-        var ufoCollider = GetCollider(ufo);
-        EngineSpaceObject ufoScript = ufo.GetComponent<EngineSpaceObject>();
-        gameInstance.AddUnit(SpaceObjectTypes.Ufo,
-            ufoCollider.size,
-            ufoScript.Speed,
-            ufoScript.ScoresForDestroy);
+        AddObjectToServer(player, SpaceObjectTypes.Player);
+        AddObjectToServer(asteroid, SpaceObjectTypes.Asteroid);
+        AddObjectToServer(asteroidFragment, SpaceObjectTypes.AsteroidFragment);
+        AddObjectToServer(ufo, SpaceObjectTypes.Ufo);
 
         ObjectSpawner.SpaceObjectSpawnEvent += sceneObjectSpawner.SpawnObject;
+        gameInstance.ScoreUpdateEvent += UpdateScore;
+        gameInstance.GameOverEvent += GameOver;
         gameInstance.StartSpawnObjects();
     }
 
     private void ResetServer()
     {
-        ObjectSpawner.SpaceObjectSpawnEvent -= sceneObjectSpawner.SpawnObject;
         gameInstance.MessageDelegateEvent -= PrintServerMessage;
+        ObjectSpawner.SpaceObjectSpawnEvent -= sceneObjectSpawner.SpawnObject;
+        gameInstance.ScoreUpdateEvent -= UpdateScore;
+        gameInstance.GameOverEvent -= GameOver;
         gameInstance.StopGame();
     }
 
@@ -116,10 +91,8 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void UpdateScore(object sender, SpaceObjectDestroyedEventArgs e)
+    public void UpdateScore(int score)
     {
-        if (e != null)
-            score += e.ScoresForDestroy;
         scorePanel.text = "Score: " + score;
     }
 
@@ -131,7 +104,7 @@ public class GameController : MonoBehaviour
         laserAccumulatorCharge.localScale = new Vector2((float)charge / (float)maxCharge, 1.0f);
     }
 
-    public void GameOver(object sender, SpaceObjectDestroyedEventArgs e)
+    public void GameOver()
     {
         ResetServer();
         if (menu != null)
@@ -154,6 +127,22 @@ public class GameController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    private void AddObjectToServer(GameObject gameObject, SpaceObjectTypes type)
+    {
+        var collider = GetCollider(gameObject);
+        Vector2 size;
+        if (collider != null)
+            size = collider.size;
+        else
+            size = Vector2.one;
+
+        EngineSpaceObject spaceObject = gameObject.GetComponent<EngineSpaceObject>();
+        gameInstance.AddUnit(type,
+            size,
+            spaceObject.Speed,
+            spaceObject.ScoresForDestroy);
     }
 
     private BoxCollider2D GetCollider(GameObject gameObj)

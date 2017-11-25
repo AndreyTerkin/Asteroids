@@ -82,7 +82,6 @@ namespace Assets.Scripts
             rb.AddForce(direction.normalized * speed, ForceMode2D.Impulse);
             var obj = clone.GetComponent<ISpaceObject>();
             obj.SpaceObject = spaceObject;
-            ScoreSubscriber.SubscribeScoreCounter(clone);
         }
 
         /// <summary>
@@ -98,7 +97,6 @@ namespace Assets.Scripts
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
             var obj = clone.GetComponent<ISpaceObject>();
             obj.SpaceObject = spaceObject;
-            ScoreSubscriber.SubscribeScoreCounter(clone);
         }
     }
 }

@@ -8,8 +8,6 @@ public class Player : EngineSpaceObject
     public event LaserChargeChanged LaserChargeChangedEvent;
 
     [SerializeField]
-    private float speed = 7.0f;
-    [SerializeField]
     private Transform shooter;
     [SerializeField]
     private GameObject bullet;
@@ -30,8 +28,8 @@ public class Player : EngineSpaceObject
 
     public override float Speed
     {
-        get { return speed; }
-        set { speed = value; }
+        get { return base.Speed; }
+        set { base.Speed = value; }
     }
 
     protected override void Awake ()
@@ -51,7 +49,7 @@ public class Player : EngineSpaceObject
             border = boundary.border;
     }
 
-    void FixedUpdate()
+    protected override void FixedUpdate()
     {
         Fly();
         if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
@@ -89,7 +87,7 @@ public class Player : EngineSpaceObject
 
         transform.position = Vector3.MoveTowards(transform.position,
                                                  transform.position + direct,
-                                                 speed * Time.deltaTime);
+                                                 Speed * Time.deltaTime);
     }
 
     private void Turn()

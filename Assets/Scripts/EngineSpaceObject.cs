@@ -30,10 +30,11 @@ public class EngineSpaceObject : MonoBehaviour, ISpaceObject
         SpaceObject = new SpaceObject();
     }
 
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (SpaceObject.Mover != null)
             transform.position = SpaceObject.Mover.UpdatePosition(transform.position);
+        SpaceObject.OnPositionChanged(this, transform.position);
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collider)
