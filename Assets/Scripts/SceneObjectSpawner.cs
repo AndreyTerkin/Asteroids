@@ -1,22 +1,42 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Factories
+using AsteroidsLibrary;
+using AsteroidsLibrary.SpaceObjects;
+
+namespace Assets.Scripts
 {
-    class SpaceObjectFactory : Object
+    class SceneObjectSpawner : Object
     {
-        protected Transform transform;
-        protected Border border;
+        private GameObject asteroid;
+        private GameObject ufo;
 
-        private AsteroidsLibrary.SpaceObjects.Factory.SpaceObjectFactory factory;
-
-        public SpaceObjectFactory(Transform transform, Border border)
+        public SceneObjectSpawner(GameObject asteroid, GameObject ufo)
         {
-            this.transform = transform;
-            this.border = border;
+            this.asteroid = asteroid;
+            this.ufo = ufo;
+        }
 
-            factory = new AsteroidsLibrary.SpaceObjects.Factory.SpaceObjectFactory(
-                border.xMin, border.xMax,
-                border.yMin, border.yMax);
+        public void SpawnObject(object sender, SpaceObjectSpawnEventArgs e)
+        {
+            switch (e.ObjectType)
+            {
+                case SpaceObjectTypes.Asteroid:
+                    if (asteroid != null)
+                    {
+                        Create(
+                            asteroid,
+                            e.Position,
+                            e.Direction,
+                            e.Attributes.Speed);
+                    }
+                    break;
+                case SpaceObjectTypes.Ufo:
+                    if (ufo != null)
+                        Create(ufo, e.Position);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
@@ -34,7 +54,6 @@ namespace Assets.Scripts.Factories
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
             rb.AddForce(direction.normalized * speed, ForceMode2D.Impulse);
-
             ScoreSubscriber.SubscribeScoreCounter(clone);
         }
 
@@ -43,23 +62,14 @@ namespace Assets.Scripts.Factories
         /// </summary>
         /// <param name="gameObject">GameObject instance to clone</param>
         /// <param name="speed"></param>
-        public void Create(GameObject gameObject, float speed)
+        public void Create(GameObject gameObject, Vector3 position, Vector2 direction, float speed)
         {
             if (gameObject == null)
                 return;
 
-            BoxCollider2D collider = GetCollider(gameObject);
-            if (collider == null)
-                return;
-
-            Vector3 position = new Vector3();
-            Vector2 direction = new Vector2(1.0f, 1.0f);
-
-            factory.InitSpawnParameters(collider.size, ref position, ref direction);
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
             Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
             rb.AddForce(direction.normalized * speed, ForceMode2D.Impulse);
-
             ScoreSubscriber.SubscribeScoreCounter(clone);
         }
 
@@ -67,38 +77,13 @@ namespace Assets.Scripts.Factories
         /// Instantiate gameObject clone behind the border without impulse
         /// </summary>
         /// <param name="gameObject">GameObject instance to clone</param>
-        public void Create(GameObject gameObject)
+        public void Create(GameObject gameObject, Vector3 position)
         {
             if (gameObject == null)
                 return;
 
-            BoxCollider2D collider = GetCollider(gameObject);
-            if (collider == null)
-                return;
-
-            Vector3 position = new Vector3();
-            Vector2 direction = new Vector2(1.0f, 1.0f);
-
-            factory.InitSpawnParameters(collider.size, ref position, ref direction);
             GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
-
             ScoreSubscriber.SubscribeScoreCounter(clone);
-        }
-
-        private BoxCollider2D GetCollider(GameObject gameObj)
-        {
-            foreach (Transform child in gameObj.transform)
-            {
-                if(child.tag == "Representation")
-                {
-                    for (int i=0; i < child.childCount; i++)
-                    {
-                        if (child.GetChild(i).gameObject.activeSelf)
-                            return child.GetChild(i).GetComponent<BoxCollider2D>();
-                    }
-                }
-            }
-            return null;
         }
     }
 }

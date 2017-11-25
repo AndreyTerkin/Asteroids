@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
-using Assets.Scripts.Factories;
+
+using Assets.Scripts;
 
 public class Asteroid : EngineSpaceObject
 {
     public GameObject fragment;
 
-    [SerializeField]
-    private float asteroidFragmentSpeed = 4.0f;
-    [SerializeField]
-    private int fragmentCount = 2;
-    [SerializeField]
-    private int scoreForDestroy = 2;
+    public float speed = 3.0f;
+    public float asteroidFragmentSpeed = 4.0f;
+    public int fragmentCount = 2;
+    public int scoreForDestroy = 2;
 
     public override int ScoresForDestroy
     {
@@ -30,7 +29,7 @@ public class Asteroid : EngineSpaceObject
             if (fragment == null) 
                 continue;
 
-            SpaceObjectFactory.Create(fragment, transform.position, asteroidFragmentSpeed);
+            SceneObjectSpawner.Create(fragment, transform.position, asteroidFragmentSpeed);
         }
         SpaceObject.OnSpaceObjectDestroyed(this, scoreForDestroy);
         Destroy(gameObject);

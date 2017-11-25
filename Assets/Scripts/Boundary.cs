@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+using AsteroidsLibrary;
+
 public class Boundary : MonoBehaviour
 {
     private BoxCollider2D boxCollider;
@@ -25,13 +27,4 @@ public class Boundary : MonoBehaviour
             }
         }
     }
-}
-
-[System.Serializable]
-public struct Border
-{
-    public float xMin;
-    public float xMax;
-    public float yMin;
-    public float yMax;
 }

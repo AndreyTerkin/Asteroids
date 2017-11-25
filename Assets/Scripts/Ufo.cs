@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
+
 using AsteroidsLibrary.Movers;
 
 public class Ufo : EngineSpaceObject
 {
-    [SerializeField]
-    private float speed = 2.0f;
-    [SerializeField]
-    private int scoreForDestroy = 3;
+    public float speed = 2.0f;
+    public int scoreForDestroy = 3;
 
     private IMovable mover;
 

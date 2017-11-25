@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+using AsteroidsLibrary;
+
 public class Player : EngineSpaceObject
 {
     public delegate void LaserChargeChanged(int charge, int maxCharge);

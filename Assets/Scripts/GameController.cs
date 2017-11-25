@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
-using Assets.Scripts.Factories;
+
+using Assets.Scripts;
+
 using AsteroidsLibrary;
 using AsteroidsLibrary.SpaceObjects;
 
@@ -21,7 +22,8 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private float maxUfoSpawnTime = 12.0f;
 
-    private SpaceObjectFactory spaceObjectFactory;
+    private Game gameInstance;
+    private SceneObjectSpawner sceneObjectSpawner;
     private RepresentationManager representationManager;
 
     private Border border;
@@ -35,6 +37,8 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        gameInstance = Game.GetInstance();
+
         waveNum = 0;
         enemiesPerWave = 10;
         score = 0;
@@ -64,22 +68,38 @@ public class GameController : MonoBehaviour
             }
         }
 
-        spaceObjectFactory = new SpaceObjectFactory(transform, border);
+        sceneObjectSpawner = new SceneObjectSpawner(asteroid, ufo);
         ConfigureServer();
     }
 
     private void ConfigureServer()
     {
-        Game.GetInstance().SpaceObjectSpawnEvent += SpawnObject;
-        Game.GetInstance().MessageDelegateEvent += PrintServerMessage;
-        Game.GetInstance().StartSpawnObjects();
+        gameInstance.MessageDelegateEvent += PrintServerMessage;
+        gameInstance.SetBorders(border);
+
+        var asteroidCollider = GetCollider(asteroid);
+        Asteroid asteroidScript = asteroid.GetComponent<Asteroid>();
+        gameInstance.AddUnit(SpaceObjectTypes.Asteroid,
+            asteroidCollider.size,
+            asteroidScript.speed,
+            asteroidScript.scoreForDestroy);
+
+        var ufoCollider = GetCollider(ufo);
+        Ufo ufoScript = ufo.GetComponent<Ufo>();
+        gameInstance.AddUnit(SpaceObjectTypes.Ufo,
+            ufoCollider.size,
+            ufoScript.speed,
+            ufoScript.scoreForDestroy);
+
+        gameInstance.SpaceObjectSpawnEvent += sceneObjectSpawner.SpawnObject;
+        gameInstance.StartSpawnObjects();
     }
 
     private void ResetServer()
     {
-        Game.GetInstance().SpaceObjectSpawnEvent -= SpawnObject;
-        Game.GetInstance().MessageDelegateEvent -= PrintServerMessage;
-        Game.GetInstance().StopGame();
+        gameInstance.SpaceObjectSpawnEvent -= sceneObjectSpawner.SpawnObject;
+        gameInstance.MessageDelegateEvent -= PrintServerMessage;
+        gameInstance.StopGame();
     }
 
     private void OnDestroy()
@@ -90,23 +110,6 @@ public class GameController : MonoBehaviour
     private void PrintServerMessage(string message)
     {
         Debug.Log(message);
-    }
-
-    private void SpawnObject(object sender, SpaceObjectSpawnEventArgs e)
-    {
-        switch (e.ObjectType)
-        {
-            case SpaceObjectTypes.Asteroid:
-                if (asteroid != null)
-                    spaceObjectFactory.Create(asteroid, asteroidSpeed);
-                break;
-            case SpaceObjectTypes.Ufo:
-                if (ufo != null)
-                    spaceObjectFactory.Create(ufo);
-                break;
-            default:
-                break;
-        }
     }
 
     private void DestroyObjectsOfTag(string tag)
@@ -156,5 +159,21 @@ public class GameController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    private BoxCollider2D GetCollider(GameObject gameObj)
+    {
+        foreach (Transform child in gameObj.transform)
+        {
+            if (child.tag == "Representation")
+            {
+                for (int i = 0; i < child.childCount; i++)
+                {
+                    if (child.GetChild(i).gameObject.activeSelf)
+                        return child.GetChild(i).GetComponent<BoxCollider2D>();
+                }
+            }
+        }
+        return null;
     }
 }
