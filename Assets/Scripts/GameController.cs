@@ -81,15 +81,15 @@ public class GameController : MonoBehaviour
         Asteroid asteroidScript = asteroid.GetComponent<Asteroid>();
         gameInstance.AddUnit(SpaceObjectTypes.Asteroid,
             asteroidCollider.size,
-            asteroidScript.speed,
-            asteroidScript.scoreForDestroy);
+            asteroidScript.Speed,
+            asteroidScript.ScoresForDestroy);
 
         var ufoCollider = GetCollider(ufo);
         Ufo ufoScript = ufo.GetComponent<Ufo>();
         gameInstance.AddUnit(SpaceObjectTypes.Ufo,
             ufoCollider.size,
-            ufoScript.speed,
-            ufoScript.scoreForDestroy);
+            ufoScript.Speed,
+            ufoScript.ScoresForDestroy);
 
         gameInstance.SpaceObjectSpawnEvent += sceneObjectSpawner.SpawnObject;
         gameInstance.StartSpawnObjects();

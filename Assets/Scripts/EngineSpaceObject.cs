@@ -5,6 +5,8 @@ public class EngineSpaceObject : MonoBehaviour, ISpaceObject
 {
     public SpaceObject SpaceObject { get; protected set; }
     public virtual int ScoresForDestroy { get; set; }
+    public virtual Vector2 Size { get; set; }
+    public virtual float Speed { get; set; }
 
     protected virtual void Awake()
     {

@@ -4,10 +4,18 @@ using AsteroidsLibrary.Movers;
 
 public class Ufo : EngineSpaceObject
 {
-    public float speed = 2.0f;
-    public int scoreForDestroy = 3;
+    [SerializeField]
+    private float speed = 2.0f;
+    [SerializeField]
+    private int scoreForDestroy = 3;
 
     private IMovable mover;
+
+    public override float Speed
+    {
+        get { return speed; }
+        set { speed = value; }
+    }
 
     public override int ScoresForDestroy
     {

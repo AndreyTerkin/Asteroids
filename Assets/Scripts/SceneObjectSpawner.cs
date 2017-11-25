@@ -51,18 +51,17 @@ namespace Assets.Scripts
                 return;
 
             Vector2 direction = new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
-            GameObject clone = Instantiate(gameObject, position, Quaternion.identity);
-            Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
-            rb.AddForce(direction.normalized * speed, ForceMode2D.Impulse);
-            ScoreSubscriber.SubscribeScoreCounter(clone);
+            Create(gameObject, position, direction, speed);
         }
 
         /// <summary>
         /// Instantiate gameObject clone behind the border with given speed
         /// </summary>
         /// <param name="gameObject">GameObject instance to clone</param>
+        /// <param name="position"></param>
+        /// <param name="direction"></param>
         /// <param name="speed"></param>
-        public void Create(GameObject gameObject, Vector3 position, Vector2 direction, float speed)
+        public static void Create(GameObject gameObject, Vector3 position, Vector2 direction, float speed)
         {
             if (gameObject == null)
                 return;
@@ -77,7 +76,8 @@ namespace Assets.Scripts
         /// Instantiate gameObject clone behind the border without impulse
         /// </summary>
         /// <param name="gameObject">GameObject instance to clone</param>
-        public void Create(GameObject gameObject, Vector3 position)
+        /// <param name="position"></param>
+        public static void Create(GameObject gameObject, Vector3 position)
         {
             if (gameObject == null)
                 return;
