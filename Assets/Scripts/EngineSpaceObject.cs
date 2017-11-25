@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EngineSpaceObject : MonoBehaviour, ISpaceObject
 {
-    public SpaceObject SpaceObject { get; protected set; }
+    public SpaceObject SpaceObject { get; set; }
     public virtual int ScoresForDestroy { get; set; }
     public virtual Vector2 Size { get; set; }
     public virtual float Speed { get; set; }
@@ -28,7 +28,7 @@ public class EngineSpaceObject : MonoBehaviour, ISpaceObject
 
     public virtual void Explode()
     {
-        SpaceObject.OnSpaceObjectDestroyed(this, ScoresForDestroy);
+        SpaceObject.OnSpaceObjectDestroyed(this, transform.position, ScoresForDestroy);
         Destroy(gameObject);
     }
 }

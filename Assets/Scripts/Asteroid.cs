@@ -29,17 +29,4 @@ public class Asteroid : EngineSpaceObject
     {
         SpaceObject.OnPositionChanged(this, transform.position);
     }
-
-    public override void Explode()
-    {
-        for (int i = 0; i < fragmentCount; ++i)
-        {
-            if (fragment == null) 
-                continue;
-
-            SceneObjectSpawner.Create(fragment, transform.position, asteroidFragmentSpeed);
-        }
-        SpaceObject.OnSpaceObjectDestroyed(this, scoreForDestroy);
-        Destroy(gameObject);
-    }
 }

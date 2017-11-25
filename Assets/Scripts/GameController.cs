@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour
     private Border border;
     private GameObject player;
     private GameObject asteroid;
+    private GameObject asteroidFragment;
     private GameObject ufo;
 
     private int waveNum;
@@ -47,6 +48,7 @@ public class GameController : MonoBehaviour
         representationManager = GetComponent<RepresentationManager>();
         player = representationManager.GetGameObjectOfType<Player>();
         asteroid = representationManager.GetGameObjectOfType<Asteroid>();
+        asteroidFragment = representationManager.GetGameObjectOfType<AsteroidFragment>();
         ufo = representationManager.GetGameObjectOfType<Ufo>();
 
         if (menu != null)
@@ -68,7 +70,7 @@ public class GameController : MonoBehaviour
             }
         }
 
-        sceneObjectSpawner = new SceneObjectSpawner(asteroid, ufo);
+        sceneObjectSpawner = new SceneObjectSpawner(asteroid, asteroidFragment, ufo);
         ConfigureServer();
     }
 
@@ -84,6 +86,13 @@ public class GameController : MonoBehaviour
             asteroidScript.Speed,
             asteroidScript.ScoresForDestroy);
 
+        var asteroidFragmentCollider = GetCollider(asteroidFragment);
+        AsteroidFragment asteroidFragmentScript = asteroidFragment.GetComponent<AsteroidFragment>();
+        gameInstance.AddUnit(SpaceObjectTypes.AsteroidFragment,
+            asteroidFragmentCollider.size,
+            asteroidFragmentScript.Speed,
+            asteroidFragmentScript.ScoresForDestroy);
+
         var ufoCollider = GetCollider(ufo);
         Ufo ufoScript = ufo.GetComponent<Ufo>();
         gameInstance.AddUnit(SpaceObjectTypes.Ufo,
@@ -91,13 +100,13 @@ public class GameController : MonoBehaviour
             ufoScript.Speed,
             ufoScript.ScoresForDestroy);
 
-        gameInstance.SpaceObjectSpawnEvent += sceneObjectSpawner.SpawnObject;
+        ObjectSpawner.SpaceObjectSpawnEvent += sceneObjectSpawner.SpawnObject;
         gameInstance.StartSpawnObjects();
     }
 
     private void ResetServer()
     {
-        gameInstance.SpaceObjectSpawnEvent -= sceneObjectSpawner.SpawnObject;
+        ObjectSpawner.SpaceObjectSpawnEvent -= sceneObjectSpawner.SpawnObject;
         gameInstance.MessageDelegateEvent -= PrintServerMessage;
         gameInstance.StopGame();
     }
