@@ -28,6 +28,12 @@ public class Player : EngineSpaceObject
     private float previousShot = 0.0f;
     private int laserAccumulator;
 
+    public override float Speed
+    {
+        get { return speed; }
+        set { speed = value; }
+    }
+
     protected override void Awake ()
     {
         base.Awake();

@@ -7,12 +7,18 @@ namespace Assets.Scripts
 {
     class SceneObjectSpawner : Object
     {
+        private GameObject player;
         private GameObject asteroid;
         private GameObject asteroidFragment;
         private GameObject ufo;
 
-        public SceneObjectSpawner(GameObject asteroid, GameObject asteroidFragment, GameObject ufo)
+        public SceneObjectSpawner(
+            GameObject player,
+            GameObject asteroid,
+            GameObject asteroidFragment,
+            GameObject ufo)
         {
+            this.player = player;
             this.asteroid = asteroid;
             this.asteroidFragment = asteroidFragment;
             this.ufo = ufo;
@@ -22,6 +28,9 @@ namespace Assets.Scripts
         {
             switch (e.Object.Type)
             {
+                case SpaceObjectTypes.Player:
+                    Create(player, e.Object, Vector3.zero);
+                    break;
                 case SpaceObjectTypes.Asteroid:
                     if (asteroid != null)
                     {
@@ -58,7 +67,12 @@ namespace Assets.Scripts
         /// <param name="position"></param>
         /// <param name="direction"></param>
         /// <param name="speed"></param>
-        public static void Create(GameObject gameObject, SpaceObject spaceObject, Vector3 position, float speed, Vector2 direction)
+        public static void Create(
+            GameObject gameObject,
+            SpaceObject spaceObject,
+            Vector3 position,
+            float speed,
+            Vector2 direction)
         {
             if (gameObject == null)
                 return;

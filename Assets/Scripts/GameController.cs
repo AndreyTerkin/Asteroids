@@ -10,17 +10,7 @@ public class GameController : MonoBehaviour
 {
     public Text scorePanel;
     public GameObject menu;
-    public float asteroidSpeed = 3.0f;
     public RectTransform laserAccumulatorCharge;
-
-    [SerializeField]
-    private float minAsteroidSpawnTime = 1.0f;
-    [SerializeField]
-    private float maxAsteroidSpawnTime = 5.0f;
-    [SerializeField]
-    private float minUfoSpawnTime = 4.0f;
-    [SerializeField]
-    private float maxUfoSpawnTime = 12.0f;
 
     private Game gameInstance;
     private SceneObjectSpawner sceneObjectSpawner;
@@ -32,24 +22,24 @@ public class GameController : MonoBehaviour
     private GameObject asteroidFragment;
     private GameObject ufo;
 
-    private int waveNum;
-    private int enemiesPerWave;
     private int score;
 
     private void Start()
     {
         gameInstance = Game.GetInstance();
 
-        waveNum = 0;
-        enemiesPerWave = 10;
         score = 0;
         UpdateScore(this, null);
 
         representationManager = GetComponent<RepresentationManager>();
-        player = representationManager.GetGameObjectOfType<Player>();
-        asteroid = representationManager.GetGameObjectOfType<Asteroid>();
-        asteroidFragment = representationManager.GetGameObjectOfType<AsteroidFragment>();
-        ufo = representationManager.GetGameObjectOfType<Ufo>();
+        player = representationManager.multiRepresentableObjects[1];
+        asteroid = representationManager.multiRepresentableObjects[3];
+        asteroidFragment = representationManager.multiRepresentableObjects[4];
+        ufo = representationManager.multiRepresentableObjects[2];
+        //player = representationManager.GetGameObjectOfType<Player>();
+        //asteroid = representationManager.GetGameObjectOfType<Asteroid>();
+        //asteroidFragment = representationManager.GetGameObjectOfType<AsteroidFragment>();
+        //ufo = representationManager.GetGameObjectOfType<Ufo>();
 
         if (menu != null)
             menu.SetActive(false);
@@ -58,19 +48,9 @@ public class GameController : MonoBehaviour
         if (boundary)
             border = boundary.border;
 
-        if (player)
-        {
-            var instance = Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity);
-            Player playerScript = instance.GetComponent<Player>();
-            if (playerScript)
-            {
-                UpdateLaserAccumulatorDisplay(1, 1); // Reset value
-                playerScript.LaserChargeChangedEvent += UpdateLaserAccumulatorDisplay;
-                playerScript.SpaceObject.SpaceObjectDestroyedEvent += GameOver;
-            }
-        }
+        UpdateLaserAccumulatorDisplay(1, 1); // Reset value
 
-        sceneObjectSpawner = new SceneObjectSpawner(asteroid, asteroidFragment, ufo);
+        sceneObjectSpawner = new SceneObjectSpawner(player, asteroid, asteroidFragment, ufo);
         ConfigureServer();
     }
 
@@ -79,22 +59,28 @@ public class GameController : MonoBehaviour
         gameInstance.MessageDelegateEvent += PrintServerMessage;
         gameInstance.SetBorders(border);
 
+        Player playerScript = player.GetComponent<Player>();
+        gameInstance.AddUnit(SpaceObjectTypes.Player,
+            Vector2.one,
+            playerScript.Speed,
+            playerScript.ScoresForDestroy);
+
         var asteroidCollider = GetCollider(asteroid);
-        Asteroid asteroidScript = asteroid.GetComponent<Asteroid>();
+        EngineSpaceObject asteroidScript = asteroid.GetComponent<EngineSpaceObject>();
         gameInstance.AddUnit(SpaceObjectTypes.Asteroid,
             asteroidCollider.size,
             asteroidScript.Speed,
             asteroidScript.ScoresForDestroy);
 
         var asteroidFragmentCollider = GetCollider(asteroidFragment);
-        AsteroidFragment asteroidFragmentScript = asteroidFragment.GetComponent<AsteroidFragment>();
+        EngineSpaceObject asteroidFragmentScript = asteroidFragment.GetComponent<EngineSpaceObject>();
         gameInstance.AddUnit(SpaceObjectTypes.AsteroidFragment,
             asteroidFragmentCollider.size,
             asteroidFragmentScript.Speed,
             asteroidFragmentScript.ScoresForDestroy);
 
         var ufoCollider = GetCollider(ufo);
-        Ufo ufoScript = ufo.GetComponent<Ufo>();
+        EngineSpaceObject ufoScript = ufo.GetComponent<EngineSpaceObject>();
         gameInstance.AddUnit(SpaceObjectTypes.Ufo,
             ufoCollider.size,
             ufoScript.Speed,
@@ -137,7 +123,7 @@ public class GameController : MonoBehaviour
         scorePanel.text = "Score: " + score;
     }
 
-    private void UpdateLaserAccumulatorDisplay(int charge, int maxCharge)
+    public void UpdateLaserAccumulatorDisplay(int charge, int maxCharge)
     {
         if (laserAccumulatorCharge == null)
             return;

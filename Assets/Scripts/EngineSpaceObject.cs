@@ -1,16 +1,39 @@
-﻿using AsteroidsLibrary.SpaceObjects;
-using UnityEngine;
+﻿using UnityEngine;
+
+using AsteroidsLibrary.SpaceObjects;
+using AsteroidsLibrary.Movers;
 
 public class EngineSpaceObject : MonoBehaviour, ISpaceObject
 {
+    [SerializeField]
+    private float speed = 1.0f;
+    [SerializeField]
+    private int scoreForDestroy = 1;
+
     public SpaceObject SpaceObject { get; set; }
-    public virtual int ScoresForDestroy { get; set; }
     public virtual Vector2 Size { get; set; }
-    public virtual float Speed { get; set; }
+
+    public virtual float Speed
+    {
+        get { return speed; }
+        set { speed = value; }
+    }
+
+    public virtual int ScoresForDestroy
+    {
+        get { return scoreForDestroy; }
+        set { scoreForDestroy = value; }
+    }
 
     protected virtual void Awake()
     {
         SpaceObject = new SpaceObject();
+    }
+
+    void FixedUpdate()
+    {
+        if (SpaceObject.Mover != null)
+            transform.position = SpaceObject.Mover.UpdatePosition(transform.position);
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collider)
