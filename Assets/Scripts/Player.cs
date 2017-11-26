@@ -109,6 +109,11 @@ public class Player : EngineSpaceObject
 
         GameObject shot = Instantiate(bullet, shooter.position, shooter.rotation);
         shot.transform.parent = gameObject.transform.parent;
+
+        SpaceObject spaceObject = ObjectSpawner.SpawnOnPosition(SpaceObjectTypes.Bullet, shooter.position, false);
+        var shotObj = shot.GetComponent<ISpaceObject>();
+        shotObj.SpaceObject = spaceObject;
+
         previousShot = Time.time + firePeriod;
     }
 
@@ -120,6 +125,10 @@ public class Player : EngineSpaceObject
         GameObject shot = Instantiate(laserBolt, shooter.position, shooter.rotation);
         shot.transform.parent = gameObject.transform.parent;
 
+        SpaceObject spaceObject = ObjectSpawner.SpawnOnPosition(SpaceObjectTypes.Laser, shooter.position, false);
+        var shotObj = shot.GetComponent<ISpaceObject>();
+        shotObj.SpaceObject = spaceObject;
+
         previousShot = Time.time + firePeriod;
         laserAccumulator -= laserShotCost;
         if (LaserChargeChangedEvent != null)
@@ -130,7 +139,9 @@ public class Player : EngineSpaceObject
     {
         if (collider.tag == "Space object")
         {
-            Explode(SpaceObjectTypes.Player);
+            ISpaceObject spaceObj = collider.gameObject.GetComponent<ISpaceObject>();
+            if (spaceObj != null)
+                Explode(spaceObj.SpaceObject);
         }
     }
 }

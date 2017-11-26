@@ -21,6 +21,8 @@ public class GameController : MonoBehaviour
     private GameObject asteroid;
     private GameObject asteroidFragment;
     private GameObject ufo;
+    private GameObject bullet;
+    private GameObject laser;
 
     private void Start()
     {
@@ -30,9 +32,11 @@ public class GameController : MonoBehaviour
 
         representationManager = GetComponent<RepresentationManager>();
         player = representationManager.multiRepresentableObjects[1];
+        ufo = representationManager.multiRepresentableObjects[2];
         asteroid = representationManager.multiRepresentableObjects[3];
         asteroidFragment = representationManager.multiRepresentableObjects[4];
-        ufo = representationManager.multiRepresentableObjects[2];
+        bullet = representationManager.multiRepresentableObjects[5];
+        laser = representationManager.multiRepresentableObjects[6];
 
         if (menu != null)
             menu.SetActive(false);
@@ -56,6 +60,8 @@ public class GameController : MonoBehaviour
         AddObjectToServer(asteroid, SpaceObjectTypes.Asteroid);
         AddObjectToServer(asteroidFragment, SpaceObjectTypes.AsteroidFragment);
         AddObjectToServer(ufo, SpaceObjectTypes.Ufo);
+        AddObjectToServer(bullet, SpaceObjectTypes.Bullet);
+        AddObjectToServer(laser, SpaceObjectTypes.Laser);
 
         ObjectSpawner.SpaceObjectSpawnEvent += sceneObjectSpawner.SpawnObject;
         gameInstance.ScoreUpdateEvent += UpdateScore;
@@ -138,7 +144,7 @@ public class GameController : MonoBehaviour
         else
             size = Vector2.one;
 
-        EngineSpaceObject spaceObject = gameObject.GetComponent<EngineSpaceObject>();
+        ISpaceObject spaceObject = gameObject.GetComponent<ISpaceObject>();
         gameInstance.AddUnit(type,
             size,
             spaceObject.Speed,

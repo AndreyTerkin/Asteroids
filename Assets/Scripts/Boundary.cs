@@ -23,7 +23,7 @@ public class Boundary : MonoBehaviour
         {
             ISpaceObject spaceObject = collider.gameObject.GetComponent<ISpaceObject>();
             if (spaceObject != null)
-                spaceObject.Explode(SpaceObjectTypes.Boundary);
+                spaceObject.Explode(null);
         }
     }
 }

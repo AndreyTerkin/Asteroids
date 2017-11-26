@@ -35,11 +35,13 @@ public class EngineSpaceObject : MonoBehaviour, ISpaceObject
     {
         if (collider.tag == "Weapon" || collider.tag == "Player")
         {
-            Explode(SpaceObjectTypes.Player);
+            ISpaceObject spaceObj = collider.gameObject.GetComponent<ISpaceObject>();
+            if (spaceObj != null)
+                Explode(spaceObj.SpaceObject);
         }
     }
 
-    public virtual void Explode(SpaceObjectTypes killer)
+    public virtual void Explode(SpaceObject killer)
     {
         SpaceObject.OnSpaceObjectDestroyed(this, transform.position, killer);
         Destroy(gameObject);
