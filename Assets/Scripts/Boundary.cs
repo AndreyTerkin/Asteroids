@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using AsteroidsLibrary;
+using AsteroidsLibrary.SpaceObjects;
 
 public class Boundary : MonoBehaviour
 {
@@ -20,7 +21,9 @@ public class Boundary : MonoBehaviour
     {
         if (collider.tag != "Player")
         {
-            Destroy(collider.gameObject);
+            ISpaceObject spaceObject = collider.gameObject.GetComponent<ISpaceObject>();
+            if (spaceObject != null)
+                spaceObject.Explode(SpaceObjectTypes.Boundary);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using AsteroidsLibrary;
+using AsteroidsLibrary.SpaceObjects;
 
 public class Player : EngineSpaceObject
 {
@@ -129,7 +130,7 @@ public class Player : EngineSpaceObject
     {
         if (collider.tag == "Space object")
         {
-            Explode();
+            Explode(SpaceObjectTypes.Player);
         }
     }
 }
