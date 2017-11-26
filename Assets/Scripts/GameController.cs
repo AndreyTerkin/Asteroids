@@ -131,7 +131,7 @@ public class GameController : MonoBehaviour
 
     private void AddObjectToServer(GameObject gameObject, SpaceObjectTypes type)
     {
-        var collider = GetCollider(gameObject);
+        var collider = gameObject.GetComponent<BoxCollider2D>();
         Vector2 size;
         if (collider != null)
             size = collider.size;
@@ -143,21 +143,5 @@ public class GameController : MonoBehaviour
             size,
             spaceObject.Speed,
             spaceObject.ScoresForDestroy);
-    }
-
-    private BoxCollider2D GetCollider(GameObject gameObj)
-    {
-        foreach (Transform child in gameObj.transform)
-        {
-            if (child.tag == "Representation")
-            {
-                for (int i = 0; i < child.childCount; i++)
-                {
-                    if (child.GetChild(i).gameObject.activeSelf)
-                        return child.GetChild(i).GetComponent<BoxCollider2D>();
-                }
-            }
-        }
-        return null;
     }
 }

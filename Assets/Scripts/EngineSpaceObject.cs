@@ -33,14 +33,9 @@ public class EngineSpaceObject : MonoBehaviour, ISpaceObject
 
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
-        // TODO: place for improvement
-        if (collider.transform.parent != null && collider.transform.parent.parent != null)
+        if (collider.tag == "Weapon" || collider.tag == "Player")
         {
-            var colliderParent = collider.transform.parent.parent;
-            if (colliderParent.tag == "Weapon" || colliderParent.tag == "Player")
-            {
-                Explode();
-            }
+            Explode();
         }
     }
 

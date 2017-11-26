@@ -127,9 +127,7 @@ public class Player : EngineSpaceObject
 
     protected override void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.transform.parent != null
-            && collider.transform.parent.parent != null
-            && collider.transform.parent.parent.tag == "Space object")
+        if (collider.tag == "Space object")
         {
             Explode();
         }
