@@ -104,13 +104,17 @@ public class Player : EngineSpaceObject
 
     private void Shoot()
     {
+        IFiring firing = SpaceObject as IFiring;
+        if (firing == null)
+            return;
+
         if (bullet == null)
             return;
 
         GameObject shot = Instantiate(bullet, shooter.position, shooter.rotation);
         shot.transform.parent = gameObject.transform.parent;
 
-        SpaceObject spaceObject = ObjectSpawner.SpawnOnPosition(SpaceObjectTypes.Bullet, shooter.position, false);
+        SpaceObject spaceObject = firing.Shoot(SpaceObjectTypes.Bullet, shooter.position);
         var shotObj = shot.GetComponent<ISpaceObject>();
         shotObj.SpaceObject = spaceObject;
 
@@ -119,13 +123,17 @@ public class Player : EngineSpaceObject
 
     private void LaserShoot()
     {
+        IFiring firing = SpaceObject as IFiring;
+        if (firing == null)
+            return;
+
         if (laserBolt == null)
             return;
 
         GameObject shot = Instantiate(laserBolt, shooter.position, shooter.rotation);
         shot.transform.parent = gameObject.transform.parent;
 
-        SpaceObject spaceObject = ObjectSpawner.SpawnOnPosition(SpaceObjectTypes.Laser, shooter.position, false);
+        SpaceObject spaceObject = firing.Shoot(SpaceObjectTypes.Bullet, shooter.position);
         var shotObj = shot.GetComponent<ISpaceObject>();
         shotObj.SpaceObject = spaceObject;
 
